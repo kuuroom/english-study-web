@@ -1,0 +1,200 @@
+{
+  "categories": [
+    {
+      "id": "be-or-action",
+      "name": "be動詞？ 一般動詞？",
+      "description": "「〜です・〜にいる・〜な状態」と「〜する」を見分けます。",
+      "lesson": "be動詞は、名前・立場・場所・状態を説明するときに使います。一般動詞は、動作や習慣を表します。",
+      "questions": [
+        {
+          "question": "私は中学生です。",
+          "hint": "「何をする」ではなく、自分の立場を説明しています。",
+          "choices": [
+            "I am a junior high school student.",
+            "I study a junior high school student."
+          ],
+          "correctIndex": 0,
+          "answer": "I am a junior high school student.",
+          "explanation": "「中学生です」は、立場・身分を説明する文なので be動詞を使います。",
+          "point": "名前・職業・立場を説明するときは be動詞。"
+        },
+        {
+          "question": "私は毎日英語を勉強します。",
+          "hint": "「勉強する」という動作があります。",
+          "choices": [
+            "I am English every day.",
+            "I study English every day."
+          ],
+          "correctIndex": 1,
+          "answer": "I study English every day.",
+          "explanation": "study は「勉強する」という動作なので、一般動詞を使います。",
+          "point": "「〜する」と言える動作には一般動詞。"
+        },
+        {
+          "question": "彼は公園にいます。",
+          "hint": "場所を表す文です。",
+          "choices": [
+            "He is in the park.",
+            "He plays in the park."
+          ],
+          "correctIndex": 0,
+          "answer": "He is in the park.",
+          "explanation": "「公園にいる」は、どこにいるかという場所の説明なので be動詞を使います。",
+          "point": "人や物がどこにいる・あるかを言うときは be動詞。"
+        },
+        {
+          "question": "彼は公園でサッカーをします。",
+          "hint": "「サッカーをする」という動作があります。",
+          "choices": [
+            "He is soccer in the park.",
+            "He plays soccer in the park."
+          ],
+          "correctIndex": 1,
+          "answer": "He plays soccer in the park.",
+          "explanation": "play は「する・遊ぶ」という動作を表す一般動詞です。",
+          "point": "場所が入っていても、文の中心が動作なら一般動詞。"
+        },
+        {
+          "question": "その犬は大きいです。",
+          "hint": "犬の状態・特徴を説明しています。",
+          "choices": [
+            "The dog is big.",
+            "The dog has big."
+          ],
+          "correctIndex": 0,
+          "answer": "The dog is big.",
+          "explanation": "big は犬の特徴・状態を説明する形容詞なので、その前に be動詞が必要です。",
+          "point": "形容詞で状態や特徴を説明するときは be動詞。"
+        },
+        {
+          "question": "その犬は速く走ります。",
+          "hint": "「走る」という動作があります。",
+          "choices": [
+            "The dog is fast.",
+            "The dog runs fast."
+          ],
+          "correctIndex": 1,
+          "answer": "The dog runs fast.",
+          "explanation": "run は「走る」という一般動詞です。fast はその走り方を説明しています。",
+          "point": "動作そのものを言うときは一般動詞。"
+        },
+        {
+          "question": "私は今、疲れています。",
+          "hint": "今の状態を表しています。",
+          "choices": [
+            "I am tired now.",
+            "I tire now."
+          ],
+          "correctIndex": 0,
+          "answer": "I am tired now.",
+          "explanation": "tired は「疲れている」という状態を表す形容詞なので be動詞を使います。",
+          "point": "気分・体調・状態を表す形容詞には be動詞。"
+        },
+        {
+          "question": "私は毎日6時に起きます。",
+          "hint": "「起きる」という習慣的な動作です。",
+          "choices": [
+            "I get up at six every day.",
+            "I am up at six every day."
+          ],
+          "correctIndex": 0,
+          "answer": "I get up at six every day.",
+          "explanation": "get up は「起きる」という動作を表します。",
+          "point": "毎日の習慣も、動作なら一般動詞。"
+        },
+        {
+          "question": "私の母は先生です。",
+          "hint": "職業を説明しています。",
+          "choices": [
+            "My mother is a teacher.",
+            "My mother teaches a teacher."
+          ],
+          "correctIndex": 0,
+          "answer": "My mother is a teacher.",
+          "explanation": "「先生です」は職業・立場の説明なので be動詞を使います。",
+          "point": "AはBです、という説明には be動詞。"
+        },
+        {
+          "question": "私の母は英語を教えます。",
+          "hint": "「教える」という動作があります。",
+          "choices": [
+            "My mother is English.",
+            "My mother teaches English."
+          ],
+          "correctIndex": 1,
+          "answer": "My mother teaches English.",
+          "explanation": "teach は「教える」という一般動詞です。",
+          "point": "職業の説明と、実際の動作を区別しよう。"
+        }
+      ]
+    },
+    {
+      "id": "meaning-check",
+      "name": "文の意味から見分ける",
+      "description": "日本語を見て、be動詞が必要かどうかを判断します。",
+      "lesson": "文の最後だけで決めず、『何を説明している文か』を考える練習です。",
+      "questions": [
+        {
+          "question": "次のうち、be動詞を使う文はどれ？",
+          "hint": "動作ではなく、状態や場所を表す文を選びます。",
+          "choices": [
+            "私は図書館にいます。",
+            "私は図書館で本を読みます。"
+          ],
+          "correctIndex": 0,
+          "answer": "私は図書館にいます。",
+          "explanation": "「います」は場所の説明です。「読みます」は動作です。",
+          "point": "いる・ある・〜です・〜な状態、なら be動詞を考える。"
+        },
+        {
+          "question": "次のうち、一般動詞を使う文はどれ？",
+          "hint": "実際の動作がある文を選びます。",
+          "choices": [
+            "彼女は親切です。",
+            "彼女は友達を助けます。"
+          ],
+          "correctIndex": 1,
+          "answer": "彼女は友達を助けます。",
+          "explanation": "「助ける」は動作です。「親切です」は状態・性質の説明です。",
+          "point": "日本語の文の中心が『何をするか』なら一般動詞。"
+        },
+        {
+          "question": "次のうち、be動詞を使う文はどれ？",
+          "hint": "年齢は動作ではありません。",
+          "choices": [
+            "私は13歳です。",
+            "私は毎日歩きます。"
+          ],
+          "correctIndex": 0,
+          "answer": "私は13歳です。",
+          "explanation": "年齢は自分の情報を説明する文なので be動詞を使います。",
+          "point": "年齢・名前・職業・国籍などの説明には be動詞。"
+        },
+        {
+          "question": "次のうち、一般動詞を使う文はどれ？",
+          "hint": "好きという気持ちは英語では like という動詞で表します。",
+          "choices": [
+            "私はゲームが好きです。",
+            "私は元気です。"
+          ],
+          "correctIndex": 0,
+          "answer": "私はゲームが好きです。",
+          "explanation": "日本語では「好きです」ですが、英語では like という一般動詞を使います。",
+          "point": "日本語が『〜です』でも、英語では一般動詞になることがある。"
+        },
+        {
+          "question": "次のうち、be動詞を使う文はどれ？",
+          "hint": "英語では hungry は形容詞です。",
+          "choices": [
+            "私はおなかがすいています。",
+            "私は昼食を食べます。"
+          ],
+          "correctIndex": 0,
+          "answer": "私はおなかがすいています。",
+          "explanation": "hungry は状態を表す形容詞なので be動詞を使います。",
+          "point": "hungry、happy、busy、tired などは be動詞と一緒に使う。"
+        }
+      ]
+    }
+  ]
+}
