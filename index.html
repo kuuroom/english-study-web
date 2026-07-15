@@ -18,12 +18,7 @@
 
   <main class="app">
     <header class="app-header">
-      <div class="brand-mark" aria-hidden="true">📖</div>
-      <div class="brand-copy">
-        <p class="eyebrow">ことばの冒険へ出発！</p>
-        <h1>English <span>Quest</span></h1>
-        <p class="lead">英語のルールを見つけて、レベルアップしよう！</p>
-      </div>
+      <img src="data/assets/logo.png" alt="English Quest えいごマスターへの冒険！" class="brand-logo">
     </header>
 
     <section class="player-status" aria-label="プレイヤー情報">
@@ -44,9 +39,21 @@
         <span aria-hidden="true">🔥</span>
         <span><strong id="streak-count">0</strong> 連続</span>
       </div>
+      <div class="correct-badge" title="このクエストの正解数">
+        <img src="data/assets/icon-star.png" alt="">
+        <span><strong id="correct-total">0</strong> 正解</span>
+      </div>
     </section>
 
     <section id="category-screen" class="screen">
+      <section class="adventure-hero" aria-label="English Questの冒険案内">
+        <div class="hero-copy">
+          <p>WELCOME, ENGLISH LEARNER!</p>
+          <h2>えいごの世界を<br><span>冒険しよう！</span></h2>
+          <p class="hero-message">クエストに挑戦して、ことばの力とEXPを集めよう。</p>
+        </div>
+        <img src="data/quest-heroes.png" alt="星の杖を持ったねこと、剣と盾を持ったうさぎ" class="hero-characters">
+      </section>
       <div class="section-heading">
         <span class="heading-icon" aria-hidden="true">🗺️</span>
         <div>
@@ -79,27 +86,37 @@
           <span aria-hidden="true">✨</span>
         </div>
         <div class="quiz-card">
+          <img src="data/quest-heroes.png" alt="" class="battle-characters" aria-hidden="true">
           <p class="mission-label">MISSION</p>
           <h2 id="question-text"></h2>
           <p id="question-hint" class="question-hint"></p>
 
           <div id="choices" class="choices"></div>
 
-          <section id="explanation-box" class="explanation hidden" aria-live="polite">
-            <div class="feedback-heading">
-              <p id="result-label" class="result-label"></p>
-              <p id="exp-gain" class="exp-gain"></p>
-            </div>
-            <p id="answer-text" class="answer-text"></p>
-            <p id="explanation-text"></p>
-            <div class="point-box">
-              <strong>💡 ポイント解説</strong>
-              <p id="point-text"></p>
-            </div>
-            <button id="next-button" class="button button-primary" type="button">次の問題へ ➜</button>
-          </section>
         </div>
       </div>
+
+      <section id="explanation-box" class="feedback-overlay hidden" aria-live="polite" aria-modal="true" role="dialog">
+        <div class="feedback-dialog">
+          <div id="feedback-ribbon" class="feedback-ribbon">正解！</div>
+          <div class="feedback-main">
+            <img id="feedback-character" src="data/assets/feedback-correct.png" alt="喜んでいる案内役キャラクター">
+            <div class="feedback-copy">
+              <div class="feedback-heading">
+                <p id="result-label" class="result-label"></p>
+                <p id="exp-gain" class="exp-gain"></p>
+              </div>
+              <p id="answer-text" class="answer-text"></p>
+              <p id="explanation-text"></p>
+            </div>
+          </div>
+          <div class="point-box feedback-point">
+            <img src="data/assets/icon-star.png" alt="">
+            <div><strong>ポイント解説</strong><p id="point-text"></p></div>
+          </div>
+          <button id="next-button" class="button button-primary" type="button">つぎの問題へ ▶</button>
+        </div>
+      </section>
     </section>
 
     <section id="result-screen" class="screen hidden">
@@ -119,7 +136,16 @@
   </main>
 
   <div id="level-up" class="level-up hidden" role="status" aria-live="polite">
-    <span>✨ LEVEL UP! ✨</span>
+    <img src="data/assets/feedback-explain.png" alt="レベルアップを祝うキャラクター">
+    <div><strong>レベルアップ！</strong><span id="level-up-values"></span></div>
+  </div>
+
+  <div id="loading-screen" class="loading-screen" role="status" aria-live="polite">
+    <div class="loading-panel">
+      <img src="data/assets/cat-sitting.png" alt="本を読みながら準備しているねこ">
+      <strong>よみこみ中…</strong>
+      <span><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
   </div>
 
   <script src="js/app.js"></script>

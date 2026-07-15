@@ -37,6 +37,9 @@ const expLabel = document.getElementById("exp-label");
 const expBar = document.getElementById("exp-bar");
 const expTrack = document.querySelector(".exp-track");
 const streakCount = document.getElementById("streak-count");
+const correctTotal = document.getElementById("correct-total");
+const feedbackRibbon = document.getElementById("feedback-ribbon");
+const feedbackCharacter = document.getElementById("feedback-character");
 
 async function loadData() {
   const response = await fetch("data/questions.json");
@@ -46,6 +49,7 @@ async function loadData() {
   updatePlayerStatus();
   renderCategories();
   updateTotalProgress();
+  document.getElementById("loading-screen").classList.add("hidden");
 }
 
 function renderCategories() {
@@ -59,6 +63,7 @@ function renderCategories() {
     button.type = "button";
     button.className = "category-card";
     button.dataset.icon = icons[index % icons.length];
+    button.style.setProperty("--quest-image", `url("data/${index % 2 === 0 ? "quest-classroom.png" : "quest-forest.png"}")`);
     button.innerHTML = `
       <p class="quest-number">QUEST ${String(index + 1).padStart(2, "0")}</p>
       <h3>${category.name}</h3>
@@ -78,6 +83,17 @@ function startQuiz(categoryId) {
   const category = state.data.categories.find(item => item.id === categoryId);
   if (!category) return;
 
+  const categoryIndex = state.data.categories.findIndex(item => item.id === categoryId);
+  const stageBackgrounds = [
+    "data/assets/background-classroom.png",
+    "data/assets/background-forest.png",
+    "data/assets/background-castle.png"
+  ];
+  document.querySelector(".quest-stage").style.setProperty(
+    "--stage-background",
+    `url("${stageBackgrounds[categoryIndex % stageBackgrounds.length]}")`
+  );
+
   state.currentCategory = category;
   state.questions = shuffle([...category.questions]);
   state.questionIndex = 0;
@@ -95,6 +111,7 @@ function renderQuestion() {
   state.answered = false;
   explanationBox.classList.add("hidden");
   resultLabel.classList.remove("correct-label");
+  explanationBox.classList.remove("correct-feedback", "incorrect-feedback");
   expGain.textContent = "";
   choices.innerHTML = "";
 
@@ -131,12 +148,20 @@ function answerQuestion(selectedIndex) {
     state.correctCount += 1;
     state.streak += 1;
     resultLabel.textContent = "Great! 正解！";
+    feedbackRibbon.textContent = "正解！";
+    feedbackCharacter.src = "data/assets/feedback-correct.png";
+    feedbackCharacter.alt = "喜んでいる案内役のねこ";
+    explanationBox.classList.add("correct-feedback");
     resultLabel.classList.add("correct-label");
     expGain.textContent = `+${EXP_PER_CORRECT} EXP`;
     addExperience(EXP_PER_CORRECT);
   } else {
     state.streak = 0;
     resultLabel.textContent = "おしい！ 次につなげよう";
+    feedbackRibbon.textContent = "おしい！";
+    feedbackCharacter.src = "data/assets/feedback-incorrect.png";
+    feedbackCharacter.alt = "おしいと励ます案内役のペンギン";
+    explanationBox.classList.add("incorrect-feedback");
     expGain.textContent = "";
     updatePlayerStatus();
   }
@@ -207,11 +232,13 @@ function updatePlayerStatus() {
   expBar.style.width = `${expInLevel}%`;
   expTrack.setAttribute("aria-valuenow", expInLevel);
   streakCount.textContent = state.streak;
+  correctTotal.textContent = state.correctCount;
 }
 
 function showLevelUp() {
   const notice = document.getElementById("level-up");
-  notice.innerHTML = `<span>✨ LEVEL UP! ✨<br>レベル ${getLevel(state.player.exp)} になったよ！</span>`;
+  const newLevel = getLevel(state.player.exp);
+  document.getElementById("level-up-values").textContent = `Lv. ${newLevel - 1}  ▶  Lv. ${newLevel}`;
   notice.classList.remove("hidden");
   window.setTimeout(() => notice.classList.add("hidden"), 2200);
 }
