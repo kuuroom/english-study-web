@@ -1,3 +1,7 @@
+/* ============================================================
+   共通設定・デザイントークン
+   色や影をCSS変数にまとめ、全体の雰囲気を一か所で変更できるようにする。
+   ============================================================ */
 * { box-sizing: border-box; }
 
 :root {
@@ -15,6 +19,7 @@
   --shadow: 0 12px 28px rgba(134, 79, 144, 0.16);
 }
 
+/* ページ全体の淡い空背景。dvhはスマートフォンのアドレスバーも考慮する。 */
 body {
   margin: 0;
   min-width: 320px;
@@ -27,15 +32,22 @@ body {
   overflow-x: hidden;
 }
 
+/* フォーム部品にも本文と同じフォントを継承させる。 */
 button { font: inherit; -webkit-tap-highlight-color: transparent; }
+/* キーボード操作時だけ、現在位置が分かるフォーカス枠を表示する。 */
 button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offset: 3px; }
 
+/* ページ背景に固定する星・ハート装飾。操作やレイアウトには影響しない。 */
 .sky-decor span { position: fixed; z-index: -1; color: rgba(212, 105, 171, .28); font-size: 2rem; }
 .sky-decor span:nth-child(1) { top: 10%; left: 5%; }
 .sky-decor span:nth-child(2) { top: 35%; right: 5%; }
 .sky-decor span:nth-child(3) { top: 72%; left: 4%; }
 .sky-decor span:nth-child(4) { top: 82%; right: 8%; }
 
+/* ============================================================
+   アプリ共通レイアウト・ヘッダー
+   820pxを上限に中央寄せし、safe-areaでiPhoneのノッチも避ける。
+   ============================================================ */
 .app { width: min(calc(100% - 28px), 820px); margin: 0 auto; padding: max(24px, env(safe-area-inset-top)) 0 max(50px, env(safe-area-inset-bottom)); }
 .app-header { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px; text-align: left; }
 .brand-logo { width: min(100%, 430px); max-height: 140px; object-fit: contain; filter: drop-shadow(0 5px 8px rgba(201,74,140,.18)); }
@@ -45,6 +57,7 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .eyebrow, .box-kicker, .mission-label, .section-heading p { margin: 0; color: var(--pink-dark); font-size: .78rem; font-weight: 900; letter-spacing: .12em; }
 .lead { margin: 8px 0 0; color: #806d88; font-size: .95rem; font-weight: 700; }
 
+/* レベル、可変幅のEXPバー、2つのバッジを横並びにする。 */
 .player-status { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 12px; margin-bottom: 26px; padding: 12px 14px; border: 2px solid rgba(255,255,255,.9); border-radius: 22px; background: rgba(255,255,255,.75); box-shadow: var(--shadow); backdrop-filter: blur(8px); }
 .level-badge { display: grid; place-items: center; width: 62px; height: 62px; border-radius: 18px; color: #fff; background: linear-gradient(145deg, var(--purple), var(--pink)); box-shadow: 0 7px 14px rgba(139, 92, 190, .25); }
 .level-badge span { font-size: .59rem; font-weight: 900; letter-spacing: .1em; }
@@ -58,8 +71,15 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .correct-badge { display: flex; align-items: center; gap: 4px; padding: 8px 10px; border-radius: 16px; color: #8a5f38; background: #fff8dc; font-size: .78rem; font-weight: 900; white-space: nowrap; }
 .correct-badge img { width: 24px; height: 24px; object-fit: contain; }
 
+/* ============================================================
+   画面切り替え
+   JavaScriptが.hiddenを付け外しし、3つの画面を切り替える。
+   ============================================================ */
 .screen { animation: fade-in .3s ease-out; }
 .hidden { display: none !important; }
+/* ============================================================
+   クエスト選択画面
+   ============================================================ */
 .adventure-hero {
   position: relative;
   display: flex;
@@ -92,6 +112,7 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .section-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .heading-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: #fff; box-shadow: 0 5px 15px rgba(123, 76, 135, .12); font-size: 1.45rem; }
 .section-heading h2 { margin: 1px 0 0; color: #573c68; font-size: clamp(1.25rem, 5vw, 1.65rem); line-height: 1.3; }
+/* カードはスマートフォンで1列、640px以上では後述の指定により2列。 */
 .category-list { display: grid; gap: 16px; }
 .category-card { position: relative; isolation: isolate; width: 100%; min-height: 196px; overflow: hidden; padding: 20px 20px 17px 82px; border: 2px solid #fff; border-radius: 24px; background: rgba(255,255,255,.92); box-shadow: var(--shadow); color: inherit; text-align: left; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
 .category-card::backdrop { display: none; }
@@ -105,13 +126,18 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .category-meta { display: flex; gap: 9px; margin-top: 13px; padding-right: 72px; font-size: .78rem; font-weight: 700; }
 .category-meta span { padding: 4px 9px; border-radius: 99px; background: #f8edf8; }
 
+/* 複数画面で使う白いパネルの共通デザイン。 */
 .progress-box, .quiz-card, .result-card { margin-top: 20px; border: 2px solid #fff; border-radius: 26px; background: rgba(255,255,255,.92); box-shadow: var(--shadow); }
 .progress-box { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px; }
 .progress-box h3 { margin: 2px 0 3px; font-size: 1rem; }
 .progress-box p:not(.box-kicker) { margin: 0; color: #826e88; font-size: .88rem; }
+/* ============================================================
+   問題画面
+   ============================================================ */
 .quiz-topbar { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 14px; }
 .text-button { min-height: 44px; padding: 8px 12px; border: 0; border-radius: 14px; background: rgba(255,255,255,.7); color: var(--purple-dark); font-weight: 900; cursor: pointer; }
 .question-counter { padding: 8px 14px; border-radius: 99px; color: #fff; background: var(--purple); font-weight: 900; }
+/* --stage-backgroundはJavaScriptがカテゴリごとに設定するCSS変数。 */
 .quest-stage {
   position: relative;
   overflow: hidden;
@@ -150,6 +176,7 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .choice-button.correct::after { content: "✓"; color: #37a56b; font-weight: 900; }
 .choice-button.incorrect { border-color: #ee91ac; background: #fff2f6; }
 .choice-button.incorrect::after { content: "○"; color: #d8688a; }
+/* 回答後、画面全体を覆って解説へ注意を向けるモーダル領域。 */
 .feedback-overlay { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: max(24px, env(safe-area-inset-top)) 14px max(24px, env(safe-area-inset-bottom)); background: rgba(74,42,78,.68); backdrop-filter: blur(5px); }
 .feedback-dialog { position: relative; width: min(100%, 680px); padding: 62px clamp(18px, 5vw, 34px) 28px; border: 4px solid #fff; border-radius: 30px; background: linear-gradient(180deg, #fffdf8, #fff8ed); box-shadow: 0 24px 70px rgba(48,25,53,.42), inset 0 0 0 3px #f4d5a7; animation: dialog-in .35s cubic-bezier(.18,.9,.35,1.2); }
 .feedback-ribbon { position: absolute; top: -25px; left: 50%; min-width: 230px; translate: -50% 0; padding: 13px 35px 17px; color: #fff; background: linear-gradient(180deg,#ff8fc1,#ee5d9a); clip-path: polygon(8% 0,92% 0,100% 25%,91% 38%,93% 100%,50% 85%,7% 100%,9% 38%,0 25%); text-align: center; text-shadow: 0 2px 3px rgba(145,42,92,.25); font-size: 1.65rem; font-weight: 900; }
@@ -172,6 +199,9 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .button-primary { width: 100%; border: 2px solid #fff; background: linear-gradient(90deg, var(--pink), var(--purple)); box-shadow: 0 7px 15px rgba(151, 90, 176, .22); color: #fff; }
 .button-secondary { border: 2px solid #d9c1e3; background: #fff; color: var(--purple-dark); }
 .button-subtle { border: 1px solid #dec9e4; background: #fff; color: #8a6a94; font-size: .78rem; }
+/* ============================================================
+   結果画面・一時通知・ローディング
+   ============================================================ */
 .result-card { padding: clamp(24px, 6vw, 42px); text-align: center; }
 .result-crown { font-size: 3rem; animation: float 2s ease-in-out infinite; }
 .result-card h2 { margin: 5px 0; color: #5e3c73; }
@@ -189,6 +219,9 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .loading-panel i { width: 10px; height: 10px; border-radius: 50%; background: var(--pink); animation: loading-dot 1s ease-in-out infinite; }
 .loading-panel i:nth-child(2) { animation-delay: .1s; }.loading-panel i:nth-child(3) { animation-delay: .2s; }.loading-panel i:nth-child(4) { animation-delay: .3s; }.loading-panel i:nth-child(5) { animation-delay: .4s; }
 
+/* ============================================================
+   アニメーション
+   ============================================================ */
 @keyframes fade-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pop { 0% { transform: scale(.75); } 70% { transform: scale(1.08); } }
 @keyframes float { 50% { transform: translateY(-6px) rotate(3deg); } }
@@ -196,11 +229,13 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 @keyframes dialog-in { from { opacity: 0; transform: translateY(20px) scale(.9); } }
 @keyframes loading-dot { 50% { transform: translateY(-7px); background: var(--purple); } }
 
+/* タブレット・PCではクエストカードと結果ボタンを2列にする。 */
 @media (min-width: 640px) {
   .category-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .result-actions { grid-template-columns: 1fr 1fr; }
 }
 
+/* スマートフォン向け。横幅を節約し、重なりや見切れを防ぐ。 */
 @media (max-width: 520px) {
   .app { width: min(calc(100% - 20px), 820px); padding-top: max(16px, env(safe-area-inset-top)); }
   .app-header { justify-content: flex-start; gap: 11px; }
@@ -238,6 +273,7 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
   .level-up img { width: 90px; height: 90px; }
 }
 
+/* OSで「視差効果を減らす」が有効なら、動きによる負担を抑える。 */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }

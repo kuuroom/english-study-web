@@ -1,26 +1,33 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <!-- 文字コードとスマートフォン表示に必要な基本設定 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f9dff0">
   <meta name="description" content="be動詞と一般動詞の使い分けを、クエスト感覚で楽しく学べる英語学習アプリです。">
   <title>English Quest</title>
+  <!-- 外部の丸ゴシックWebフォントを先に接続して表示を高速化する -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- このアプリ専用の見た目。読み込み順はWebフォントより後にする -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- 背景に浮かぶ装飾。aria-hiddenにより読み上げ対象から除外する -->
   <div class="sky-decor" aria-hidden="true">
     <span>✦</span><span>♡</span><span>✧</span><span>★</span>
   </div>
 
+  <!-- アプリ本体。最大幅はCSS側で制限し、PCでも中央に表示する -->
   <main class="app">
+    <!-- 全画面で共通して表示されるロゴ -->
     <header class="app-header">
       <img src="data/assets/logo.png" alt="English Quest えいごマスターへの冒険！" class="brand-logo">
     </header>
 
+    <!-- レベル、経験値、今回の連続正解数・正解数を表示する共通ステータス -->
     <section class="player-status" aria-label="プレイヤー情報">
       <div class="level-badge">
         <span>LEVEL</span>
@@ -31,6 +38,7 @@
           <span>EXP</span>
           <strong id="exp-label">0 / 100</strong>
         </div>
+        <!-- aria属性により、見た目だけでなく支援技術にも進捗を伝える -->
         <div class="exp-track" role="progressbar" aria-label="次のレベルまでの経験値" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
           <div id="exp-bar" class="exp-bar"></div>
         </div>
@@ -45,7 +53,12 @@
       </div>
     </section>
 
+    <!-- =====================================================
+         画面1：クエスト選択
+         初期表示される画面なのでhiddenクラスを付けない。
+         ===================================================== -->
     <section id="category-screen" class="screen">
+      <!-- トップの案内画像とキャッチコピー -->
       <section class="adventure-hero" aria-label="English Questの冒険案内">
         <div class="hero-copy">
           <p>WELCOME, ENGLISH LEARNER!</p>
@@ -54,6 +67,7 @@
         </div>
         <img src="data/quest-heroes.png" alt="星の杖を持ったねこと、剣と盾を持ったうさぎ" class="hero-characters">
       </section>
+      <!-- クエスト一覧の見出し -->
       <div class="section-heading">
         <span class="heading-icon" aria-hidden="true">🗺️</span>
         <div>
@@ -61,8 +75,10 @@
           <h2>挑戦するクエストを選ぼう</h2>
         </div>
       </div>
+      <!-- カード本体はquestions.jsonを基にJavaScriptが挿入する -->
       <div id="category-list" class="category-list"></div>
 
+      <!-- localStorageに保存された挑戦回数を表示・リセットする領域 -->
       <section class="progress-box">
         <div>
           <p class="box-kicker">🏆 ADVENTURE LOG</p>
@@ -73,29 +89,38 @@
       </section>
     </section>
 
+    <!-- =====================================================
+         画面2：問題
+         showScreen()がhiddenクラスを付け外しして表示を切り替える。
+         ===================================================== -->
     <section id="quiz-screen" class="screen hidden">
+      <!-- 一覧へ戻る操作と現在の問題番号 -->
       <div class="quiz-topbar">
         <button id="back-button" class="text-button" type="button">← クエスト選択</button>
         <span id="question-count" class="question-counter"></span>
       </div>
 
+      <!-- 背景画像を持つステージ。カテゴリに応じた画像をJSで設定する -->
       <div class="quest-stage">
         <div class="stage-banner">
           <span aria-hidden="true">⚔️</span>
           <p id="category-name" class="category-label"></p>
           <span aria-hidden="true">✨</span>
         </div>
+        <!-- 問題文・ヒント・動的に生成される選択肢 -->
         <div class="quiz-card">
           <img src="data/quest-heroes.png" alt="" class="battle-characters" aria-hidden="true">
           <p class="mission-label">MISSION</p>
           <h2 id="question-text"></h2>
           <p id="question-hint" class="question-hint"></p>
 
+          <!-- 選択肢ボタンは問題データからJavaScriptが挿入する -->
           <div id="choices" class="choices"></div>
 
         </div>
       </div>
 
+      <!-- 回答後に前面へ表示する正誤結果・解説ダイアログ -->
       <section id="explanation-box" class="feedback-overlay hidden" aria-live="polite" aria-modal="true" role="dialog">
         <div class="feedback-dialog">
           <div id="feedback-ribbon" class="feedback-ribbon">正解！</div>
@@ -119,6 +144,10 @@
       </section>
     </section>
 
+    <!-- =====================================================
+         画面3：クエスト結果
+         全問回答後に今回の点数とメッセージを表示する。
+         ===================================================== -->
     <section id="result-screen" class="screen hidden">
       <div class="result-card">
         <div class="result-crown" aria-hidden="true">👑</div>
@@ -135,11 +164,13 @@
     </section>
   </main>
 
+  <!-- レベルアップ時だけ画面中央へ一時表示される通知 -->
   <div id="level-up" class="level-up hidden" role="status" aria-live="polite">
     <img src="data/assets/feedback-explain.png" alt="レベルアップを祝うキャラクター">
     <div><strong>レベルアップ！</strong><span id="level-up-values"></span></div>
   </div>
 
+  <!-- questions.jsonの読込完了まで全画面を覆うローディング表示 -->
   <div id="loading-screen" class="loading-screen" role="status" aria-live="polite">
     <div class="loading-panel">
       <img src="data/assets/cat-sitting.png" alt="本を読みながら準備しているねこ">
@@ -148,6 +179,7 @@
     </div>
   </div>
 
+  <!-- HTML要素をすべて読み込んだ後でアプリ処理を開始する -->
   <script src="js/app.js"></script>
 </body>
 </html>
