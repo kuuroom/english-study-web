@@ -67,7 +67,7 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .exp-track { height: 14px; overflow: hidden; border: 3px solid #eadcf0; border-radius: 99px; background: #fff; }
 .exp-bar { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #ff8fc4, #9d7ee5); transition: width .45s ease; }
 .streak-badge { display: flex; align-items: center; gap: 5px; padding: 8px 12px; border-radius: 16px; color: #a74d77; background: #fff0f7; font-size: .82rem; font-weight: 900; white-space: nowrap; }
-.streak-badge > span:first-child { font-size: 1.2rem; }
+.streak-badge img { width: 24px; height: 24px; object-fit: contain; }
 .correct-badge { display: flex; align-items: center; gap: 4px; padding: 8px 10px; border-radius: 16px; color: #8a5f38; background: #fff8dc; font-size: .78rem; font-weight: 900; white-space: nowrap; }
 .correct-badge img { width: 24px; height: 24px; object-fit: contain; }
 
