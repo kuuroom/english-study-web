@@ -81,6 +81,8 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
    クエスト選択画面
    ============================================================ */
 .adventure-hero {
+  /* 城画像は正方形。高さ100%なので、枠高から上下のボーダーを除いた値が表示幅になる。 */
+  --hero-art-width: 279px;
   position: relative;
   display: flex;
   align-items: center;
@@ -91,7 +93,15 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
   border: 3px solid #fff;
   border-radius: 30px;
   background:
-    linear-gradient(90deg, rgba(255,247,251,.98) 0%, rgba(255,241,248,.9) 44%, rgba(255,241,248,.1) 76%),
+    /* 城画像の左端を白く覆い、画像の右端へ向かってなだらかに透明にする。 */
+    linear-gradient(90deg,
+      rgba(255,247,251,.99) 0,
+      rgba(255,247,251,.99) calc(100% - var(--hero-art-width)),
+      rgba(255,247,251,.98) calc(100% - var(--hero-art-width) + 35px),
+      rgba(255,245,250,.88) calc(100% - var(--hero-art-width) + 70px),
+      rgba(255,243,249,.56) calc(100% - var(--hero-art-width) + 145px),
+      rgba(255,241,248,.20) calc(100% - var(--hero-art-width) + 220px),
+      rgba(255,241,248,.03) 100%),
     url("../data/quest-castle.png") right center / auto 100% no-repeat,
     #ffeaf4;
   box-shadow: var(--shadow);
@@ -256,7 +266,7 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
   .quest-stage { padding-inline: 6px; }
   .quiz-card { border-radius: 22px; }
   .feedback-heading { align-items: flex-start; flex-direction: column; }
-  .adventure-hero { min-height: 245px; padding: 24px 18px; background-size: auto, auto 100%; }
+  .adventure-hero { --hero-art-width: 239px; min-height: 245px; padding: 24px 18px; background-size: auto, auto 100%; }
   .hero-copy { width: 55%; }
   .hero-copy h2 { font-size: 1.55rem; }
   .hero-message { max-width: 180px; font-size: .78rem; line-height: 1.65; }
