@@ -63,7 +63,6 @@ function renderCategories() {
     button.type = "button";
     button.className = "category-card";
     button.dataset.icon = icons[index % icons.length];
-    button.style.setProperty("--quest-image", `url("data/${index % 2 === 0 ? "quest-classroom.png" : "quest-forest.png"}")`);
     button.innerHTML = `
       <p class="quest-number">QUEST ${String(index + 1).padStart(2, "0")}</p>
       <h3>${category.name}</h3>
@@ -85,9 +84,9 @@ function startQuiz(categoryId) {
 
   const categoryIndex = state.data.categories.findIndex(item => item.id === categoryId);
   const stageBackgrounds = [
-    "data/assets/background-classroom.png",
-    "data/assets/background-forest.png",
-    "data/assets/background-castle.png"
+    "../data/assets/background-classroom.png",
+    "../data/assets/background-forest.png",
+    "../data/assets/background-castle.png"
   ];
   document.querySelector(".quest-stage").style.setProperty(
     "--stage-background",

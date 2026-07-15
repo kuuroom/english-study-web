@@ -96,7 +96,6 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .category-card { position: relative; isolation: isolate; width: 100%; min-height: 196px; overflow: hidden; padding: 20px 20px 17px 82px; border: 2px solid #fff; border-radius: 24px; background: rgba(255,255,255,.92); box-shadow: var(--shadow); color: inherit; text-align: left; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
 .category-card::backdrop { display: none; }
 .category-card > * { position: relative; z-index: 2; }
-.category-card { background-image: linear-gradient(90deg, rgba(255,255,255,.98) 0 60%, rgba(255,255,255,.7)), var(--quest-image); background-position: center, right center; background-size: auto, auto 100%; background-repeat: no-repeat; }
 .category-card::before { content: attr(data-icon); position: absolute; left: 18px; top: 20px; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: linear-gradient(145deg, #ffe1ef, #e8dcff); font-size: 1.5rem; }
 .category-card::after { content: "PLAY  ➜"; position: absolute; right: 17px; bottom: 17px; color: var(--purple-dark); font-size: .76rem; font-weight: 900; letter-spacing: .08em; }
 .category-card:hover, .category-card:focus-visible { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(134, 79, 144, .22); }
@@ -225,7 +224,7 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
   .hero-copy h2 { font-size: 1.55rem; }
   .hero-message { font-size: .78rem; }
   .hero-characters { right: -15%; bottom: -1%; width: 63%; }
-  .category-card { min-height: 180px; background-image: linear-gradient(90deg, rgba(255,255,255,.98) 0 70%, rgba(255,255,255,.66)), var(--quest-image); }
+  .category-card { min-height: 180px; }
   .battle-characters { right: -8px; bottom: -108px; width: 145px; }
   .feedback-dialog { padding-top: 54px; }
   .feedback-main { grid-template-columns: 105px 1fr; gap: 10px; }
