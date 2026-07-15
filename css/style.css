@@ -220,10 +220,10 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
   .quiz-card { border-radius: 22px; }
   .feedback-heading { align-items: flex-start; flex-direction: column; }
   .adventure-hero { min-height: 245px; padding: 24px 18px; background-size: auto, auto 100%; }
-  .hero-copy { width: 63%; }
+  .hero-copy { width: 55%; }
   .hero-copy h2 { font-size: 1.55rem; }
-  .hero-message { font-size: .78rem; }
-  .hero-characters { right: -15%; bottom: -1%; width: 63%; }
+  .hero-message { max-width: 180px; font-size: .78rem; line-height: 1.65; }
+  .hero-characters { right: 0; bottom: -1%; width: 56%; }
   .category-card { min-height: 180px; }
   .battle-characters { right: -8px; bottom: -108px; width: 145px; }
   .feedback-dialog { padding-top: 54px; }
