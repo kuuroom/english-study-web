@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { pathToFileURL } from "node:url";
 
 const dataPath = new URL("../data/questions.json", import.meta.url);
 const data = JSON.parse(fs.readFileSync(dataPath, "utf8"));
@@ -138,7 +139,7 @@ const grammarSeeds = [
 ];
 
 // [英語, 日本語, 品詞]。STEP 1は最重要の基礎語150語以上。
-const vocabularyRows = [
+export const vocabularyRows = [
   ["be","～である・いる","verb"],["have","持っている","verb"],["do","する","verb"],["go","行く","verb"],
   ["come","来る","verb"],["get","得る・着く","verb"],["make","作る","verb"],["take","取る・連れて行く","verb"],
   ["see","見る・会う","verb"],["look","見る","verb"],["watch","見る","verb"],["hear","聞こえる","verb"],
@@ -208,7 +209,10 @@ data.vocabularyUnits = [
 ];
 data.version = 2;
 
-fs.writeFileSync(dataPath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
-console.log(`文法単元: ${data.grammarUnits.length}`);
-console.log(`初期文法問題: ${grammarSeeds.reduce((sum, unit) => sum + unit.questions.length, 0)}問`);
-console.log(`基礎単語: ${vocabularyUnit.words.length}語`);
+// 他の生成スクリプトから基礎単語一覧だけをimportした場合は書き込まない。
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  fs.writeFileSync(dataPath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+  console.log(`文法単元: ${data.grammarUnits.length}`);
+  console.log(`初期文法問題: ${grammarSeeds.reduce((sum, unit) => sum + unit.questions.length, 0)}問`);
+  console.log(`基礎単語: ${vocabularyUnit.words.length}語`);
+}

@@ -4,7 +4,8 @@ const data = JSON.parse(fs.readFileSync(new URL("../data/questions.json", import
 const errors = [];
 const allUnitIds = new Set();
 const expectedGrammarUnits = new Map([[1, 14], [2, 12], [3, 11]]);
-const expectedVocabularyCounts = new Map([[1, 150], [2, 250], [3, 350], [4, 450], [5, 450]]);
+const expectedVocabularyCounts = new Map([[0, 154], [1, 600], [2, 450], [3, 450]]);
+const allWordIds = new Set();
 
 function addError(message) {
   errors.push(message);
@@ -51,10 +52,15 @@ for (const unit of data.vocabularyUnits || []) {
   if (unit.words.length < unit.drawCount) {
     addError(`${unit.id}: 登録${unit.words.length}語に対して出題${unit.drawCount}問`);
   }
+  if (unit.words.length > 80) {
+    addError(`${unit.id}: 1カテゴリ80語以下の上限を超えています（${unit.words.length}語）`);
+  }
   const wordIds = new Set();
   unit.words.forEach((word, index) => {
     if (wordIds.has(word.id)) addError(`${unit.id}: 単語ID重複 ${word.id}`);
+    if (allWordIds.has(word.id)) addError(`カテゴリをまたぐ単語ID重複 ${word.id}`);
     wordIds.add(word.id);
+    allWordIds.add(word.id);
     if (!word.id || !word.word || !word.meanings?.[0] || !word.partOfSpeech) {
       addError(`${unit.id} ${index + 1}語目: 必須項目不足`);
     }
@@ -68,12 +74,13 @@ for (const [grade, expectedCount] of expectedGrammarUnits) {
   }
 }
 
-for (const [step, minimumCount] of expectedVocabularyCounts) {
-  const vocabularyUnit = (data.vocabularyUnits || []).find(unit => unit.step === step);
-  if (!vocabularyUnit) {
-    addError(`単語STEP ${step}がありません`);
-  } else if (vocabularyUnit.words.length < minimumCount) {
-    addError(`単語STEP ${step}: ${minimumCount}語以上必要ですが、${vocabularyUnit.words.length}語です`);
+for (const [grade, expectedCount] of expectedVocabularyCounts) {
+  const actualCount = (data.vocabularyUnits || [])
+    .filter(unit => unit.grade === grade)
+    .reduce((sum, unit) => sum + unit.words.length, 0);
+  if (actualCount !== expectedCount) {
+    const label = grade === 0 ? "基礎" : `中${grade}`;
+    addError(`${label}単語: ${expectedCount}語必要ですが、${actualCount}語です`);
   }
 }
 
@@ -83,5 +90,5 @@ if (errors.length) {
 } else {
   const grammarCount = data.grammarUnits.reduce((sum, unit) => sum + unit.questions.length, 0);
   const vocabularyCount = data.vocabularyUnits.reduce((sum, unit) => sum + unit.words.length, 0);
-  console.log(`OK: 文法${data.grammarUnits.length}単元・${grammarCount}問、単語${data.vocabularyUnits.length}ステップ・${vocabularyCount}語`);
+  console.log(`OK: 文法${data.grammarUnits.length}単元・${grammarCount}問、単語${data.vocabularyUnits.length}カテゴリ・${vocabularyCount}語`);
 }

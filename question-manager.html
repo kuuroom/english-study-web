@@ -138,7 +138,7 @@
     <div id="vocabulary-manager" class="manager-layout hidden">
       <aside class="manager-sidebar">
         <div class="panel-heading">
-          <div><p>VOCABULARY UNITS</p><h2>単語ステップ</h2></div>
+          <div><p>VOCABULARY UNITS</p><h2>単語カテゴリ</h2></div>
           <button id="add-vocabulary-unit-button" class="small-button" type="button">＋追加</button>
         </div>
         <div id="vocabulary-unit-list" class="manager-list"></div>
@@ -147,25 +147,26 @@
       <section class="manager-content">
         <form id="vocabulary-unit-form" class="editor-panel">
           <div class="panel-heading">
-            <div><p>VOCABULARY UNIT</p><h2>ステップ設定</h2></div>
+            <div><p>VOCABULARY UNIT</p><h2>カテゴリ設定</h2></div>
             <button id="delete-vocabulary-unit-button" class="small-button danger-button" type="button">削除</button>
           </div>
           <div class="form-grid">
             <label>ID<input id="vocabulary-unit-id" required pattern="[a-z0-9-]+"></label>
             <label>名称<input id="vocabulary-unit-name" required></label>
-            <label>学年
+              <label>学年
               <select id="vocabulary-unit-grade">
+                <option value="0">基礎</option>
                 <option value="1">中学1年</option>
                 <option value="2">中学2年</option>
                 <option value="3">中学3年</option>
               </select>
             </label>
-            <label>STEP<input id="vocabulary-unit-step" type="number" min="1" required></label>
+            <label>カテゴリ番号<input id="vocabulary-unit-step" type="number" min="1" required></label>
             <label>表示順<input id="vocabulary-unit-order" type="number" min="1" required></label>
             <label>1回の出題数<input id="vocabulary-unit-draw-count" type="number" min="1" max="100" required></label>
             <label class="full-field">説明<textarea id="vocabulary-unit-description" rows="2" required></textarea></label>
           </div>
-          <button class="manager-button manager-button-primary" type="submit">ステップ設定を反映</button>
+          <button class="manager-button manager-button-primary" type="submit">カテゴリ設定を反映</button>
         </form>
 
         <section class="editor-panel">

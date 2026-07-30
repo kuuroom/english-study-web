@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { vocabularyRows as basicVocabularyRows } from "./seed-initial-content.mjs";
 
 const dataUrl = new URL("../data/questions.json", import.meta.url);
 const data = JSON.parse(fs.readFileSync(dataUrl, "utf8"));
@@ -484,7 +485,7 @@ function addUsefulPhrases(words, step) {
   return words;
 }
 
-const vocabularyUnits = vocabularySources.map(source => ({
+const generatedVocabularySteps = vocabularySources.map(source => ({
   id: source.id,
   grade: source.grade,
   step: source.step,
@@ -501,11 +502,150 @@ const vocabularyUnits = vocabularySources.map(source => ({
   }))
 }));
 
-const vocabularyIds = new Set(vocabularyUnits.map(item => item.id));
-data.vocabularyUnits = [
-  ...data.vocabularyUnits.filter(item => !vocabularyIds.has(item.id)),
-  ...vocabularyUnits
-].sort((a, b) => a.step - b.step);
+// STEP 1も原稿から毎回作るため、テーマ分割後に再実行しても語が欠けない。
+const basicVocabularyStep = {
+  id: "v1-basic-words",
+  grade: 0,
+  step: 1,
+  words: basicVocabularyRows.map(([word, meaning, partOfSpeech], index) => ({
+    id: `v1-${String(index + 1).padStart(3, "0")}-${word.replaceAll(" ", "-")}`,
+    word,
+    meanings: [meaning],
+    partOfSpeech,
+    grade: 0,
+    step: 1,
+    order: index + 1
+  }))
+};
+const vocabularyPool = [
+  basicVocabularyStep,
+  ...generatedVocabularySteps
+];
+
+// 単語は学年だけでなく、学習者が内容を想像しやすいテーマでも分類する。
+// 熟語・複合表現は単語と混ぜず、各学年の「熟語・重要表現」にまとめる。
+const vocabularyThemes = {
+  0: [
+    ["verbs", "超基本動詞", /verb/],
+    ["adjectives", "基本形容詞・副詞", /adjective|adverb/],
+    ["people-numbers", "人・代名詞・数", /pronoun|noun/],
+    ["function-words", "時・場所・つなぎ言葉", /preposition|conjunction|phrase/]
+  ],
+  1: [
+    ["school", "学校・教科", /学校|教科|授業|宿題|テスト|ノート|鉛筆|辞書|教室|体育館|部活動|English|math|science|history|geography/],
+    ["time", "曜日・月・季節・時刻", /曜日|月|春|夏|秋|冬|時刻|時間|分|朝|昼|夕|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|January|February|March|April|May|June|July|August|September|October|November|December/],
+    ["people", "家族・人物・職業", /家族|父|母|兄|弟|姉|妹|祖父|祖母|おじ|おば|いとこ|男性|女性|子ども|赤ちゃん|医師|看護師|警察|農家|料理人|歌手|選手/],
+    ["home", "家・身の回りの物", /家|部屋|台所|浴室|庭|ベッド|机|椅子|ドア|窓|壁|床|かばん|ペン|鉛筆|定規|時計|電話|コンピューター/],
+    ["food", "食べ物・飲み物", /食|飲|米|ご飯|パン|肉|魚|卵|牛乳|ジュース|果物|野菜|りんご|バナナ|オレンジ|じゃがいも|トマト|ケーキ|水/],
+    ["hobbies", "スポーツ・音楽・趣味", /野球|バスケット|サッカー|テニス|バレー|卓球|バドミントン|ピアノ|ギター|バイオリン|音楽|絵|写真|物語/],
+    ["town", "町・施設・交通", /店|病院|銀行|郵便局|博物館|動物園|レストラン|ホテル|空港|駅|通り|道|都市|町|村|国|公園|図書館/],
+    ["nature", "自然・天気・動物", /山|川|海|湖|浜辺|木|花|天気|雨|雪|風|雲|太陽|月|星|動物|鳥|馬|牛|豚|うさぎ|ライオン|ゾウ/],
+    ["verbs", "基本動詞", /verb/],
+    ["descriptions", "形容詞・副詞", /adjective|adverb|noun/]
+  ],
+  2: [
+    ["daily", "日常生活・活動", /活動|経験|思い出|機会|交通|事故|記録|一員|集団/],
+    ["feelings", "感情・性格", /恐れ|怒|興奮|驚|心配|うれし|誇り|孤独|親しみ|快適/],
+    ["culture", "行事・文化", /行事|祭り|文化|伝統|習慣/],
+    ["society", "社会・地域", /社会|地域|人口|戦争|平和|法律|規則|ボランティア/],
+    ["nature", "自然・環境", /自然|環境|地球|宇宙|惑星|森林|島|植物|昆虫|空気|地面|火|氷|気温|季節|エネルギー/],
+    ["health", "健康・医療", /健康|医療|薬|運動/],
+    ["sports", "スポーツ・競技", /スポーツ|試合|競走|得点|賞|選手|チーム/],
+    ["verbs", "説明・活動に使う動詞", /verb/],
+    ["descriptions", "比較・説明に使う語", /adjective|adverb|noun/]
+  ],
+  3: [
+    ["opinion", "意見・コミュニケーション", /意見|意思疎通|声|見方|考え|表現|報告|提案/],
+    ["education", "教育・将来・職業", /教育|将来|職業|卒業|技能|能力|努力|成功|知識|研究/],
+    ["society", "社会問題・人権", /社会|政府|産業|人権|平等|多様性|自由|責任|公平/],
+    ["environment", "環境・災害", /環境|気候|温暖化|汚染|ごみ|資源|野生|種|災害|地震|洪水|干ばつ/],
+    ["culture", "文化・国際理解", /文化|国際|外国|観光|訪問|案内/],
+    ["technology", "科学・技術・メディア", /科学|技術|記事|ウェブ|メディア|番組|機械|仕組み|計画/],
+    ["abstract", "抽象的な名詞", /noun/],
+    ["verbs", "発展動詞", /verb/],
+    ["descriptions", "発展形容詞・副詞", /adjective|adverb/]
+  ]
+};
+
+function classifyVocabularyWord(word, grade) {
+  if (word.partOfSpeech === "phrase") return ["expressions", "熟語・重要表現"];
+  const target = `${word.word} ${word.meanings.join(" ")} ${word.partOfSpeech}`;
+  const themes = vocabularyThemes[grade] || vocabularyThemes[3];
+  const match = themes.find(([, , pattern]) => pattern.test(target));
+  return match ? match.slice(0, 2) : ["other", "その他の重要語"];
+}
+
+function splitVocabularyIntoThemes(pool) {
+  const groups = new Map();
+
+  for (const source of pool) {
+    const grade = Number(source.grade);
+    for (const word of source.words) {
+      const [themeId, themeName] = classifyVocabularyWord(word, grade);
+      const key = `${grade}:${themeId}`;
+      if (!groups.has(key)) groups.set(key, { grade, themeId, themeName, words: [] });
+      groups.get(key).words.push({ ...word, grade });
+    }
+  }
+
+  // 10語未満の小分類は、同学年の補助カテゴリへまとめる。
+  // 基礎熟語は「つなぎ言葉」へ含め、中2・中3の少数テーマは
+  // 「その他の重要語」として10問出題できるまとまりにする。
+  for (const [key, group] of [...groups]) {
+    if (group.words.length >= 10) continue;
+    const mergeThemeId = group.grade === 0 ? "function-words" : "other";
+    const mergeThemeName = group.grade === 0 ? "時・場所・つなぎ言葉" : "その他の重要語";
+    const mergeKey = `${group.grade}:${mergeThemeId}`;
+    if (mergeKey === key) continue;
+    if (!groups.has(mergeKey)) {
+      groups.set(mergeKey, {
+        grade: group.grade,
+        themeId: mergeThemeId,
+        themeName: mergeThemeName,
+        words: []
+      });
+    }
+    groups.get(mergeKey).words.push(...group.words);
+    groups.delete(key);
+  }
+
+  const units = [];
+  const gradeOrders = new Map();
+  for (const group of groups.values()) {
+    // 1カテゴリが大きくなりすぎないよう70語単位に分割する。
+    const chunks = [];
+    for (let index = 0; index < group.words.length; index += 70) {
+      chunks.push(group.words.slice(index, index + 70));
+    }
+    // 最後だけ10語未満になった場合、直前のカテゴリへ戻して出題数を確保する。
+    if (chunks.length > 1 && chunks.at(-1).length < 10) {
+      chunks.at(-2).push(...chunks.pop());
+    }
+
+    chunks.forEach((words, chunkIndex) => {
+      const nextOrder = (gradeOrders.get(group.grade) || 0) + 1;
+      gradeOrders.set(group.grade, nextOrder);
+      const numberedName = chunks.length > 1
+        ? `${group.themeName} ${chunkIndex + 1}`
+        : group.themeName;
+      const gradeLabel = group.grade === 0 ? "基礎" : `中学${group.grade}年`;
+      units.push({
+        id: `v-${group.grade}-${group.themeId}-${chunkIndex + 1}`,
+        grade: group.grade,
+        step: nextOrder,
+        order: nextOrder,
+        drawCount: 10,
+        name: numberedName,
+        description: `${gradeLabel}の「${numberedName}」を英日・日英の両方向で練習します。`,
+        words: words.map((word, wordIndex) => ({ ...word, step: nextOrder, order: wordIndex + 1 }))
+      });
+    });
+  }
+  return units.sort((a, b) => a.grade - b.grade || a.order - b.order);
+}
+
+const vocabularyUnits = splitVocabularyIntoThemes(vocabularyPool);
+data.vocabularyUnits = vocabularyUnits;
 
 fs.writeFileSync(dataUrl, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 

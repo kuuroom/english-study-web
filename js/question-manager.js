@@ -102,7 +102,7 @@ function validateData(rawData) {
 
   data.vocabularyUnits.forEach((unit, unitIndex) => {
     if (!unit.id || !unit.name || !Number.isInteger(Number(unit.grade)) || !Array.isArray(unit.words)) {
-      throw new Error(`${unitIndex + 1}番目の単語ステップの形式が正しくありません。`);
+      throw new Error(`${unitIndex + 1}番目の単語カテゴリの形式が正しくありません。`);
     }
     assertUniqueId(ids, unit.id, "単元");
     const wordIds = new Set();
@@ -338,7 +338,8 @@ function renderVocabularyUnits() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = `category-manager-button${index === managerState.selectedVocabularyIndex ? " active" : ""}`;
-    button.innerHTML = `<strong>中${unit.grade} ${escapeHtml(unit.name)}</strong><small>${unit.words.length}語 · ${escapeHtml(unit.id)}</small>`;
+    const gradeLabel = Number(unit.grade) === 0 ? "基礎" : `中${unit.grade}`;
+    button.innerHTML = `<strong>${gradeLabel} ${escapeHtml(unit.name)}</strong><small>${unit.words.length}語 · ${escapeHtml(unit.id)}</small>`;
     button.addEventListener("click", () => {
       managerState.selectedVocabularyIndex = index;
       renderVocabulary();
@@ -346,7 +347,7 @@ function renderVocabularyUnits() {
     elements.vocabularyUnitList.appendChild(button);
   });
   if (!managerState.data.vocabularyUnits.length) {
-    elements.vocabularyUnitList.innerHTML = '<p class="empty-message">単語ステップがありません。</p>';
+    elements.vocabularyUnitList.innerHTML = '<p class="empty-message">単語カテゴリがありません。</p>';
   }
 }
 
@@ -356,7 +357,7 @@ function renderVocabularyUnitForm() {
   if (!unit) return;
   elements.vocabularyUnitId.value = unit.id;
   elements.vocabularyUnitName.value = unit.name;
-  elements.vocabularyUnitGrade.value = String(unit.grade || 1);
+  elements.vocabularyUnitGrade.value = String(unit.grade ?? 1);
   elements.vocabularyUnitStep.value = unit.step || 1;
   elements.vocabularyUnitOrder.value = unit.order || 1;
   elements.vocabularyUnitDrawCount.value = unit.drawCount || 10;
@@ -380,12 +381,12 @@ function addVocabularyUnit() {
   const id = createUnusedId("new-vocabulary-unit", managerState.data.vocabularyUnits);
   managerState.data.vocabularyUnits.push({
     id, grade: 1, step: 1, order: managerState.data.vocabularyUnits.length + 1,
-    drawCount: 10, name: "新しい単語ステップ", description: "", words: []
+    drawCount: 10, name: "新しい単語カテゴリ", description: "", words: []
   });
   managerState.selectedVocabularyIndex = managerState.data.vocabularyUnits.length - 1;
   renderVocabulary();
   elements.vocabularyUnitName.focus();
-  showStatus("単語ステップを追加しました。");
+  showStatus("単語カテゴリを追加しました。");
 }
 
 function applyVocabularyUnit(event) {
@@ -408,7 +409,7 @@ function applyVocabularyUnit(event) {
     description: elements.vocabularyUnitDescription.value.trim()
   });
   renderVocabularyUnits();
-  showStatus("単語ステップの設定を反映しました。", "success");
+  showStatus("単語カテゴリの設定を反映しました。", "success");
 }
 
 function deleteVocabularyUnit() {
@@ -417,12 +418,12 @@ function deleteVocabularyUnit() {
   managerState.data.vocabularyUnits.splice(managerState.selectedVocabularyIndex, 1);
   managerState.selectedVocabularyIndex = Math.max(0, managerState.selectedVocabularyIndex - 1);
   renderVocabulary();
-  showStatus("単語ステップを削除しました。");
+  showStatus("単語カテゴリを削除しました。");
 }
 
 function openWordEditor(index = null) {
   const unit = getCurrentVocabularyUnit();
-  if (!unit) return showStatus("先に単語ステップを追加してください。", "error");
+  if (!unit) return showStatus("先に単語カテゴリを追加してください。", "error");
   managerState.editingWordIndex = index;
   const word = index === null
     ? { id: "", word: "", meanings: [""], partOfSpeech: "verb", example: "", exampleJa: "", note: "" }

@@ -110,10 +110,15 @@ function renderCategories() {
   categoryList.innerHTML = "";
 
   courseTabs.forEach(tab => tab.classList.toggle("active", tab.dataset.course === state.selectedCourse));
+  gradeTabs.forEach(tab => {
+    if (tab.classList.contains("vocabulary-only")) {
+      tab.classList.toggle("hidden", state.selectedCourse !== "vocabulary");
+    }
+  });
   gradeTabs.forEach(tab => tab.classList.toggle("active", Number(tab.dataset.grade) === state.selectedGrade));
   questBoardTitle.textContent = state.selectedCourse === "grammar"
     ? `中学${state.selectedGrade}年の文法`
-    : `中学${state.selectedGrade}年の単語`;
+    : state.selectedGrade === 0 ? "基礎の単語" : `中学${state.selectedGrade}年の単語`;
 
   const units = getVisibleUnits();
   units.forEach((category, index) => {
@@ -451,6 +456,8 @@ document.getElementById("return-button").addEventListener("click", () => showScr
 document.getElementById("retry-button").addEventListener("click", () => startQuiz(state.currentCategory.course, state.currentCategory.id));
 courseTabs.forEach(tab => tab.addEventListener("click", () => {
   state.selectedCourse = tab.dataset.course;
+  // 単語では基礎から、文法では中学1年から選び始める。
+  state.selectedGrade = state.selectedCourse === "vocabulary" ? 0 : 1;
   renderCategories();
 }));
 gradeTabs.forEach(tab => tab.addEventListener("click", () => {
