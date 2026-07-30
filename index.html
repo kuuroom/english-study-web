@@ -12,7 +12,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
   <!-- このアプリ専用の見た目。読み込み順はWebフォントより後にする -->
-  <link rel="stylesheet" href="css/style.css">
+  <!-- バージョン値を変えると、公開後も古いCSSキャッシュを使わず再取得する -->
+  <link rel="stylesheet" href="css/style.css?v=20260730-1">
 </head>
 <body>
   <!-- 背景に浮かぶ装飾。aria-hiddenにより読み上げ対象から除外する -->
@@ -215,6 +216,7 @@
   </div>
 
   <!-- HTML要素をすべて読み込んだ後でアプリ処理を開始する -->
-  <script src="js/app.js"></script>
+  <!-- GitHub Pages更新後に古いJavaScriptが残らないようバージョンを付ける -->
+  <script src="js/app.js?v=20260730-1"></script>
 </body>
 </html>

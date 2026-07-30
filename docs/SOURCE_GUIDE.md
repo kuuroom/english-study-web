@@ -208,6 +208,10 @@ JSONにはコメントを書けない点に注意してください。末尾の�
 
 `@media (max-width: 520px)` 内を変更します。PC側へ影響させずに調整できます。
 
+### 公開後に古いCSS・JavaScriptが表示される場合
+
+各HTMLが読み込むCSS・JavaScriptのURLには、`?v=20260730-1` のようなバージョン値を付けています。CSSやJavaScriptを更新してGitHub Pagesへ公開するときは、この値も変更してください。URLが変わるため、ブラウザは古いキャッシュではなく新しいファイルを取得します。問題JSONは `cache: "no-store"` で読み込みます。
+
 ### 文法単元・単語カテゴリを増やす
 
 問題管理ページを使用するか、`data/questions.json` の `grammarUnits` または `vocabularyUnits` へ追加します。問題背景は3枚を順番に繰り返します。

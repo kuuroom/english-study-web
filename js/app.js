@@ -76,7 +76,8 @@ const weakCategoryList = document.getElementById("weak-category-list");
 // ============================================================
 // 問題JSONを非同期で読み込み、トップ画面を初期描画する。
 async function loadData() {
-  const response = await fetch("data/questions.json");
+  // GitHub Pagesやブラウザの古い問題データを使わず、公開中の最新版を確認する。
+  const response = await fetch("data/questions.json", { cache: "no-store" });
   if (!response.ok) throw new Error("問題データを読み込めませんでした。");
 
   state.data = normalizeData(await response.json());
