@@ -14,6 +14,8 @@ Visual Studio CodeのLive Serverなどを使い、表示されたURLへアクセ
 ```text
 english-study-web/
 ├─ index.html                 3画面のHTML構造
+├─ settings.html              設定ページ
+├─ question-manager.html      問題管理ページ
 ├─ css/
 │  └─ style.css              デザインとレスポンシブ対応
 ├─ js/
@@ -48,3 +50,18 @@ english-study-web/
 ```
 
 詳しい処理の流れ、保存データ、CSSの構成は [docs/SOURCE_GUIDE.md](docs/SOURCE_GUIDE.md) を参照してください。
+
+## 問題管理ページ
+
+ゲーム画面右上の歯車から「設定」へ進み、「問題管理」を開きます。
+
+問題管理ページでは次の操作ができます。
+
+- カテゴリの追加・編集・削除
+- 問題の追加・編集・削除
+- ブラウザ内への下書き保存
+- 公開中の `data/questions.json` の再読込
+- JSONファイルの読込
+- 編集済み `questions.json` のダウンロード
+
+GitHub Pagesは静的サイトなので、管理ページから公開中のファイルを直接更新することはできません。ダウンロードした `questions.json` で `data/questions.json` を置き換え、Gitへコミット・pushすると公開内容へ反映されます。

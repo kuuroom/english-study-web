@@ -1,0 +1,215 @@
+/* 設定・問題管理ページ専用。ゲーム側の色やボタンの雰囲気を引き継ぐ。 */
+body {
+  color: #594064;
+  font-family: "Zen Maru Gothic", sans-serif;
+}
+
+.management-page {
+  width: min(calc(100% - 28px), 760px);
+  margin: 0 auto;
+  padding: max(24px, env(safe-area-inset-top)) 0 max(50px, env(safe-area-inset-bottom));
+}
+
+.management-page-wide { width: min(calc(100% - 28px), 1120px); }
+
+.page-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.page-nav a {
+  color: #7650bd;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.management-header {
+  margin-bottom: 22px;
+  padding: clamp(22px, 5vw, 36px);
+  border: 3px solid #fff;
+  border-radius: 28px;
+  background: rgba(255,255,255,.86);
+  box-shadow: var(--shadow);
+}
+
+.management-header > p:first-child,
+.panel-heading p {
+  margin: 0;
+  color: var(--pink-dark);
+  font-size: .75rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.management-header h1 { margin: 4px 0 8px; font-size: clamp(1.7rem, 5vw, 2.4rem); }
+.management-header > p:last-child { margin: 0; color: #806d88; font-weight: 700; }
+
+.setting-list { display: grid; gap: 14px; }
+
+.setting-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 96px;
+  padding: 18px;
+  border: 2px solid #fff;
+  border-radius: 22px;
+  background: rgba(255,255,255,.9);
+  box-shadow: var(--shadow);
+  color: inherit;
+  text-decoration: none;
+}
+
+a.setting-card:hover, a.setting-card:focus-visible { transform: translateY(-2px); }
+.setting-card-static { grid-template-columns: auto 1fr; }
+.setting-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: #f8edf8; font-size: 1.6rem; }
+.setting-card strong, .setting-card small { display: block; }
+.setting-card strong { margin-bottom: 4px; font-size: 1.05rem; }
+.setting-card small { color: #806d88; line-height: 1.6; }
+.setting-card > span:last-child { color: #a98cc0; font-size: 2rem; }
+
+.manager-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.manager-button,
+.small-button {
+  border: 1px solid #dccbe5;
+  border-radius: 13px;
+  background: #fff;
+  color: #654b75;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.manager-button { min-height: 44px; padding: 9px 15px; }
+.small-button { min-height: 36px; padding: 6px 11px; font-size: .78rem; }
+.manager-button-primary { border-color: transparent; background: linear-gradient(135deg, var(--pink), var(--purple)); color: #fff; }
+.manager-button-subtle { color: #87708f; }
+.danger-button { border-color: #efb1c2; background: #fff3f6; color: #bd4d70; }
+.file-button { display: inline-flex; align-items: center; }
+.file-button input { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
+.manager-button:hover, .small-button:hover { filter: brightness(.97); transform: translateY(-1px); }
+
+.manager-status {
+  min-height: 1.6em;
+  margin: 8px 0 14px;
+  color: #6e5680;
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+.manager-status.success { color: #278255; }
+.manager-status.error { color: #bd3f63; }
+
+.manager-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.manager-sidebar,
+.editor-panel {
+  border: 2px solid #fff;
+  border-radius: 22px;
+  background: rgba(255,255,255,.9);
+  box-shadow: var(--shadow);
+}
+
+.manager-sidebar {
+  position: sticky;
+  top: 12px;
+  padding: 16px;
+}
+
+.manager-content { display: grid; gap: 18px; }
+.editor-panel { padding: clamp(16px, 3vw, 24px); }
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.panel-heading h2 { margin: 2px 0 0; font-size: 1.15rem; }
+.panel-heading h2 span { color: #8b7394; font-size: .8rem; }
+.manager-list, .question-manager-list { display: grid; gap: 9px; }
+
+.category-manager-button,
+.question-manager-item {
+  width: 100%;
+  border: 1px solid #e4d5e9;
+  border-radius: 14px;
+  background: #fff;
+  color: inherit;
+  text-align: left;
+}
+
+.category-manager-button { padding: 12px; cursor: pointer; }
+.category-manager-button strong, .category-manager-button small { display: block; }
+.category-manager-button small { margin-top: 3px; color: #8a758f; }
+.category-manager-button.active { border-color: #b98ad0; background: #fbf2ff; box-shadow: inset 4px 0 #aa79cc; }
+
+.question-manager-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+}
+
+.question-manager-number { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: #f6eaf7; color: #8b5ca1; font-size: .75rem; font-weight: 900; }
+.question-manager-copy strong, .question-manager-copy small { display: block; }
+.question-manager-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.question-manager-copy small { margin-top: 3px; color: #8a758f; }
+.question-manager-item button { padding: 6px 10px; border: 0; border-radius: 9px; background: #eee4f4; color: #6d5080; font-weight: 900; cursor: pointer; }
+.empty-message { margin: 8px 0; color: #8a758f; text-align: center; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.form-grid label { display: grid; gap: 6px; color: #6b5278; font-size: .8rem; font-weight: 900; }
+.form-grid .full-field { grid-column: 1 / -1; }
+.form-grid input, .form-grid textarea, .form-grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #eaddec;
+  border-radius: 12px;
+  background: #fff;
+  color: #493653;
+  font: inherit;
+}
+
+.form-grid textarea { resize: vertical; }
+.form-grid input:focus, .form-grid textarea:focus, .form-grid select:focus { outline: 3px solid rgba(157,126,229,.2); border-color: #bb9bd2; }
+.form-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+@media (max-width: 760px) {
+  .manager-layout { grid-template-columns: 1fr; }
+  .manager-sidebar { position: static; }
+}
+
+@media (max-width: 520px) {
+  .management-page, .management-page-wide { width: calc(100% - 20px); }
+  .management-header { padding: 20px; border-radius: 22px; }
+  .manager-toolbar { display: grid; grid-template-columns: 1fr 1fr; }
+  .manager-button, .file-button { justify-content: center; text-align: center; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid .full-field { grid-column: auto; }
+  .question-manager-item { grid-template-columns: auto minmax(0, 1fr); }
+  .question-manager-item button { grid-column: 1 / -1; }
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f9dff0">
+  <title>問題管理 | English Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/management.css">
+</head>
+<body>
+  <main class="management-page management-page-wide">
+    <nav class="page-nav">
+      <a href="settings.html">← 設定へ戻る</a>
+      <a href="index.html">ゲームを開く</a>
+    </nav>
+
+    <header class="management-header">
+      <p>QUESTION MANAGER</p>
+      <h1>問題管理</h1>
+      <p>編集内容はブラウザ内の下書きに保存できます。公開用にはJSONをダウンロードしてください。</p>
+    </header>
+
+    <section class="manager-toolbar" aria-label="データ操作">
+      <button id="save-draft-button" class="manager-button manager-button-primary" type="button">下書き保存</button>
+      <button id="download-button" class="manager-button" type="button">JSONをダウンロード</button>
+      <label class="manager-button file-button">
+        JSONを読み込む
+        <input id="import-file" type="file" accept=".json,application/json">
+      </label>
+      <button id="reload-button" class="manager-button manager-button-subtle" type="button">公開中データを再読込</button>
+    </section>
+
+    <p id="manager-status" class="manager-status" role="status" aria-live="polite"></p>
+
+    <div class="manager-layout">
+      <aside class="manager-sidebar">
+        <div class="panel-heading">
+          <div>
+            <p>CATEGORIES</p>
+            <h2>カテゴリ</h2>
+          </div>
+          <button id="add-category-button" class="small-button" type="button">＋追加</button>
+        </div>
+        <div id="category-manager-list" class="manager-list"></div>
+      </aside>
+
+      <section class="manager-content">
+        <form id="category-form" class="editor-panel">
+          <div class="panel-heading">
+            <div>
+              <p>CATEGORY</p>
+              <h2>カテゴリ設定</h2>
+            </div>
+            <button id="delete-category-button" class="small-button danger-button" type="button">削除</button>
+          </div>
+
+          <div class="form-grid">
+            <label>ID<input id="category-id" required pattern="[a-z0-9-]+" placeholder="example-category"></label>
+            <label>カテゴリ名<input id="category-name-input" required></label>
+            <label class="full-field">説明<textarea id="category-description" rows="2" required></textarea></label>
+            <label class="full-field">学習ポイント<textarea id="category-lesson" rows="2"></textarea></label>
+          </div>
+          <button class="manager-button manager-button-primary" type="submit">カテゴリ設定を反映</button>
+        </form>
+
+        <section class="editor-panel">
+          <div class="panel-heading">
+            <div>
+              <p>QUESTIONS</p>
+              <h2>問題一覧 <span id="question-total"></span></h2>
+            </div>
+            <button id="add-question-button" class="small-button" type="button">＋問題追加</button>
+          </div>
+          <div id="question-manager-list" class="question-manager-list"></div>
+        </section>
+
+        <form id="question-form" class="editor-panel hidden">
+          <div class="panel-heading">
+            <div>
+              <p>QUESTION EDITOR</p>
+              <h2 id="question-editor-title">問題を編集</h2>
+            </div>
+            <button id="close-question-button" class="small-button" type="button">閉じる</button>
+          </div>
+
+          <div class="form-grid">
+            <label class="full-field">問題文<textarea id="question-input" rows="2" required></textarea></label>
+            <label class="full-field">ヒント<textarea id="hint-input" rows="2" required></textarea></label>
+            <label>選択肢1<input id="choice-0" required></label>
+            <label>選択肢2<input id="choice-1" required></label>
+            <label>選択肢3（任意）<input id="choice-2"></label>
+            <label>選択肢4（任意）<input id="choice-3"></label>
+            <label>正解
+              <select id="correct-index" required>
+                <option value="0">選択肢1</option>
+                <option value="1">選択肢2</option>
+                <option value="2">選択肢3</option>
+                <option value="3">選択肢4</option>
+              </select>
+            </label>
+            <label class="full-field">答え<input id="answer-input" required></label>
+            <label class="full-field">詳しい解説<textarea id="explanation-input" rows="3" required></textarea></label>
+            <label class="full-field">覚え方のポイント<textarea id="point-input" rows="2" required></textarea></label>
+          </div>
+
+          <div class="form-actions">
+            <button class="manager-button manager-button-primary" type="submit">問題を反映</button>
+            <button id="delete-question-button" class="manager-button danger-button" type="button">この問題を削除</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/question-manager.js"></script>
+</body>
+</html>
