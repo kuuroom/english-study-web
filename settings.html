@@ -37,10 +37,15 @@
         <span class="setting-icon">💾</span>
         <span>
           <strong>学習記録</strong>
-          <small>学習記録のリセットはゲーム画面下部から行えます。</small>
+          <small>クエストの挑戦記録、EXP、レベルを初期状態へ戻します。</small>
         </span>
+        <button id="reset-progress-button" class="manager-button danger-button" type="button">記録をリセット</button>
       </section>
     </section>
+
+    <!-- リセット後の完了メッセージを、画面読み上げでも通知する -->
+    <p id="settings-status" class="manager-status" role="status" aria-live="polite"></p>
   </main>
+  <script src="js/settings.js"></script>
 </body>
 </html>

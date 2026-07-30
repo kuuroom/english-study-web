@@ -51,8 +51,9 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 .app { width: min(calc(100% - 28px), 820px); margin: 0 auto; padding: max(24px, env(safe-area-inset-top)) 0 max(50px, env(safe-area-inset-bottom)); }
 .app-header { position: relative; display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px; text-align: left; }
 .brand-logo { width: min(100%, 430px); max-height: 140px; object-fit: contain; filter: drop-shadow(0 5px 8px rgba(201,74,140,.18)); }
-.settings-link { position: absolute; right: 0; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid #fff; border-radius: 15px; background: rgba(255,255,255,.82); box-shadow: var(--shadow); color: #7049a9; text-decoration: none; font-size: 1.25rem; }
-.settings-link:hover, .settings-link:focus-visible { transform: translateY(-2px); }
+.app-footer { display: flex; justify-content: center; margin-top: 30px; padding-top: 18px; border-top: 1px solid rgba(118, 80, 189, .14); }
+.settings-link { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 112px; min-height: 44px; padding: 8px 18px; border: 2px solid #fff; border-radius: 15px; background: rgba(255,255,255,.82); box-shadow: var(--shadow); color: #7049a9; text-decoration: none; font-size: .95rem; font-weight: 900; transition: transform .2s ease, box-shadow .2s ease; }
+.settings-link:hover, .settings-link:focus-visible { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(134, 79, 144, .22); }
 .brand-mark { display: grid; place-items: center; width: 68px; height: 68px; flex: 0 0 auto; border: 3px solid #fff; border-radius: 22px; background: linear-gradient(145deg, #ff9ac6, #a986e9); box-shadow: var(--shadow); font-size: 2rem; transform: rotate(-4deg); }
 .brand-copy h1 { margin: 0; color: #7049a9; font-size: clamp(2rem, 8vw, 3.25rem); line-height: 1; letter-spacing: -.04em; text-shadow: 0 3px #fff; }
 .brand-copy h1 span { color: var(--pink-dark); }
@@ -260,7 +261,8 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 @media (max-width: 520px) {
   .app { width: min(calc(100% - 20px), 820px); padding-top: max(16px, env(safe-area-inset-top)); }
   .app-header { justify-content: flex-start; gap: 11px; }
-  .settings-link { right: 2px; width: 40px; height: 40px; }
+  .app-footer { margin-top: 24px; }
+  .settings-link { min-height: 42px; }
   .brand-mark { width: 52px; height: 52px; border-radius: 17px; font-size: 1.5rem; }
   .lead { font-size: .78rem; }
   .player-status { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px; padding: 10px; }

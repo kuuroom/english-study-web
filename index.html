@@ -25,7 +25,6 @@
     <!-- 全画面で共通して表示されるロゴ -->
     <header class="app-header">
       <img src="data/assets/logo.png" alt="English Quest えいごマスターへの冒険！" class="brand-logo">
-      <a class="settings-link" href="settings.html" aria-label="設定を開く" title="設定">⚙️</a>
     </header>
 
     <!-- レベル、経験値、今回の連続正解数・正解数を表示する共通ステータス -->
@@ -89,14 +88,13 @@
       <!-- カード本体はquestions.jsonを基にJavaScriptが挿入する -->
       <div id="category-list" class="category-list"></div>
 
-      <!-- localStorageに保存された挑戦回数を表示・リセットする領域 -->
+      <!-- localStorageに保存された挑戦回数を表示する領域。リセット操作は設定ページに置く -->
       <section class="progress-box">
         <div>
           <p class="box-kicker">🏆 ADVENTURE LOG</p>
           <h3>これまでの冒険記録</h3>
           <p id="total-progress">まだ記録はありません。</p>
         </div>
-        <button id="reset-progress-button" class="button button-subtle" type="button">記録をリセット</button>
       </section>
     </section>
 
@@ -173,6 +171,11 @@
         </div>
       </div>
     </section>
+
+    <!-- 日常の学習操作を邪魔しないよう、設定への入口はページの一番下に置く -->
+    <footer class="app-footer">
+      <a class="settings-link" href="settings.html" aria-label="設定を開く">⚙️ 設定</a>
+    </footer>
   </main>
 
   <!-- レベルアップ時だけ画面中央へ一時表示される通知 -->

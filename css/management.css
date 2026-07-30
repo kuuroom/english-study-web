@@ -64,7 +64,7 @@ body {
 }
 
 a.setting-card:hover, a.setting-card:focus-visible { transform: translateY(-2px); }
-.setting-card-static { grid-template-columns: auto 1fr; }
+.setting-card-static { grid-template-columns: auto minmax(0, 1fr) auto; }
 .setting-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: #f8edf8; font-size: 1.6rem; }
 .setting-card strong, .setting-card small { display: block; }
 .setting-card strong { margin-bottom: 4px; font-size: 1.05rem; }
@@ -97,6 +97,11 @@ a.setting-card:hover, a.setting-card:focus-visible { transform: translateY(-2px)
 .file-button { display: inline-flex; align-items: center; }
 .file-button input { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
 .manager-button:hover, .small-button:hover { filter: brightness(.97); transform: translateY(-1px); }
+
+@media (max-width: 520px) {
+  .setting-card-static { grid-template-columns: auto minmax(0, 1fr); }
+  .setting-card-static .manager-button { grid-column: 1 / -1; width: 100%; }
+}
 
 .manager-status {
   min-height: 1.6em;

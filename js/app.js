@@ -432,19 +432,6 @@ function updateTotalProgress() {
   totalProgress.textContent = `${records.length}クエストに挑戦・合計${attempts}回プレイ`;
 }
 
-// 確認ダイアログの同意後、学習記録と経験値をすべて初期化する。
-function resetProgress() {
-  const shouldReset = window.confirm("学習記録・EXP・レベルをすべてリセットしますか？");
-  if (!shouldReset) return;
-  localStorage.removeItem("englishStudyProgress");
-  localStorage.removeItem(PLAYER_STORAGE_KEY);
-  state.player = { exp: 0 };
-  state.streak = 0;
-  updatePlayerStatus();
-  renderCategories();
-  updateTotalProgress();
-}
-
 // Fisher–Yates法で配列を偏りにくくランダムに並べ替える。
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i -= 1) {
@@ -462,7 +449,6 @@ document.getElementById("next-button").addEventListener("click", nextQuestion);
 document.getElementById("back-button").addEventListener("click", () => showScreen("category"));
 document.getElementById("return-button").addEventListener("click", () => showScreen("category"));
 document.getElementById("retry-button").addEventListener("click", () => startQuiz(state.currentCategory.course, state.currentCategory.id));
-document.getElementById("reset-progress-button").addEventListener("click", resetProgress);
 courseTabs.forEach(tab => tab.addEventListener("click", () => {
   state.selectedCourse = tab.dataset.course;
   renderCategories();
