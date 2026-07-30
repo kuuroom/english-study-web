@@ -20,12 +20,14 @@ node tools/serve-local.mjs
 ```text
 english-study-web/
 ├─ index.html                 3画面のHTML構造
+├─ progress.html              冒険記録ページ
 ├─ settings.html              設定ページ
 ├─ question-manager.html      問題管理ページ
 ├─ css/
 │  └─ style.css              デザインとレスポンシブ対応
 ├─ js/
-│  └─ app.js                 出題、採点、画面切替、記録保存
+│  ├─ app.js                 出題、採点、画面切替、記録保存
+│  └─ progress.js            正答率・進捗・カテゴリ別記録の集計
 ├─ data/
 │  ├─ questions.json         文法単元・問題・単語データ
 │  ├─ quest-castle.png       トップ画面の背景

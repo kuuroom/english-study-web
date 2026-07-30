@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f9dff0">
+  <title>冒険記録 | English Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260730-2">
+  <link rel="stylesheet" href="css/management.css?v=20260730-2">
+</head>
+<body>
+  <main class="management-page progress-page">
+    <nav class="page-nav">
+      <a href="index.html">← ゲームへ戻る</a>
+      <a href="settings.html">設定</a>
+    </nav>
+
+    <header class="management-header">
+      <p>🏆 ADVENTURE LOG</p>
+      <h1>これまでの冒険記録</h1>
+      <p id="total-progress">記録を読み込んでいます。</p>
+    </header>
+
+    <section class="progress-stats" aria-label="学習進捗">
+      <div class="progress-stat">
+        <span>全体正答率</span>
+        <strong id="overall-correct-rate">--%</strong>
+      </div>
+      <div class="progress-stat">
+        <span>文法の進捗</span>
+        <strong id="grammar-progress">0 / 37</strong>
+      </div>
+      <div class="progress-stat">
+        <span>単語の進捗</span>
+        <strong id="vocabulary-progress">0 / 43</strong>
+      </div>
+    </section>
+
+    <section class="editor-panel weak-category-box">
+      <div class="panel-heading">
+        <div>
+          <p>REVIEW</p>
+          <h2>もう一度練習したいカテゴリ</h2>
+        </div>
+      </div>
+      <ul id="weak-category-list">
+        <li>クエストに挑戦すると表示されます。</li>
+      </ul>
+    </section>
+
+    <section class="editor-panel">
+      <div class="panel-heading">
+        <div>
+          <p>QUEST RESULTS</p>
+          <h2>カテゴリ別の記録</h2>
+        </div>
+      </div>
+      <div id="category-record-list" class="category-record-list">
+        <p class="empty-message">記録を読み込んでいます。</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/progress.js?v=20260730-2"></script>
+</body>
+</html>

@@ -46,7 +46,6 @@ const categoryList = document.getElementById("category-list");
 const questBoardTitle = document.getElementById("quest-board-title");
 const courseTabs = [...document.querySelectorAll(".course-tab")];
 const gradeTabs = [...document.querySelectorAll(".grade-tab")];
-const totalProgress = document.getElementById("total-progress");
 const categoryName = document.getElementById("category-name");
 const questionCount = document.getElementById("question-count");
 const questionText = document.getElementById("question-text");
@@ -66,10 +65,6 @@ const streakCount = document.getElementById("streak-count");
 const correctTotal = document.getElementById("correct-total");
 const feedbackRibbon = document.getElementById("feedback-ribbon");
 const feedbackCharacter = document.getElementById("feedback-character");
-const overallCorrectRate = document.getElementById("overall-correct-rate");
-const grammarProgress = document.getElementById("grammar-progress");
-const vocabularyProgress = document.getElementById("vocabulary-progress");
-const weakCategoryList = document.getElementById("weak-category-list");
 
 // ============================================================
 // 初期化
@@ -83,7 +78,6 @@ async function loadData() {
   state.data = normalizeData(await response.json());
   updatePlayerStatus();
   renderCategories();
-  updateTotalProgress();
   document.getElementById("loading-screen").classList.add("hidden");
 }
 
@@ -365,7 +359,6 @@ function finishQuiz() {
 
   document.getElementById("result-message").textContent = message;
   renderCategories();
-  updateTotalProgress();
   showScreen("result");
 }
 
@@ -444,70 +437,6 @@ function saveProgress(categoryId, course, score, total) {
     course
   };
   localStorage.setItem("englishStudyProgress", JSON.stringify(progress));
-}
-
-// 保存された記録から、全体正答率・形式別進捗・苦手カテゴリをまとめる。
-function updateTotalProgress() {
-  const progress = getProgressData();
-  const records = Object.values(progress);
-  const grammarUnits = state.data?.grammarUnits || [];
-  const vocabularyUnits = state.data?.vocabularyUnits || [];
-
-  const attemptedGrammar = grammarUnits.filter(unit => progress[unit.id]).length;
-  const attemptedVocabulary = vocabularyUnits.filter(unit => progress[unit.id]).length;
-  grammarProgress.textContent = `${attemptedGrammar} / ${grammarUnits.length}`;
-  vocabularyProgress.textContent = `${attemptedVocabulary} / ${vocabularyUnits.length}`;
-
-  if (records.length === 0) {
-    totalProgress.textContent = "まだ記録はありません。最初のクエストへ出発しよう！";
-    overallCorrectRate.textContent = "--%";
-    weakCategoryList.innerHTML = "<li>クエストに挑戦すると表示されます。</li>";
-    return;
-  }
-
-  const attempts = records.reduce((sum, item) => sum + item.attempts, 0);
-  const correctAnswers = records.reduce(
-    (sum, item) => sum + (item.totalCorrect ?? item.lastScore ?? 0),
-    0
-  );
-  const answeredQuestions = records.reduce(
-    (sum, item) => sum + (item.totalQuestions ?? item.total ?? 0),
-    0
-  );
-  const correctRate = answeredQuestions
-    ? Math.round((correctAnswers / answeredQuestions) * 100)
-    : 0;
-
-  totalProgress.textContent = `${records.length}クエストに挑戦・合計${attempts}回プレイ`;
-  overallCorrectRate.textContent = `${correctRate}%`;
-
-  // 現在も存在するカテゴリだけを対象に、累積正答率が低い順で最大3件表示する。
-  const allUnits = [
-    ...grammarUnits.map(unit => ({ ...unit, courseLabel: "文法" })),
-    ...vocabularyUnits.map(unit => ({ ...unit, courseLabel: "単語" }))
-  ];
-  const weakCategories = allUnits
-    .filter(unit => progress[unit.id])
-    .map(unit => {
-      const record = progress[unit.id];
-      const correct = record.totalCorrect ?? record.lastScore ?? 0;
-      const questions = record.totalQuestions ?? record.total ?? 0;
-      return {
-        name: unit.name,
-        courseLabel: unit.courseLabel,
-        rate: questions ? Math.round((correct / questions) * 100) : 0,
-        attempts: record.attempts || 1
-      };
-    })
-    .filter(item => item.rate < 80)
-    .sort((a, b) => a.rate - b.rate || b.attempts - a.attempts)
-    .slice(0, 3);
-
-  weakCategoryList.innerHTML = weakCategories.length
-    ? weakCategories.map(item =>
-      `<li><span>${item.courseLabel}・${item.name}</span><strong>${item.rate}%</strong></li>`
-    ).join("")
-    : "<li>正答率80%未満のカテゴリはありません。</li>";
 }
 
 // Fisher–Yates法で配列を偏りにくくランダムに並べ替える。

@@ -117,6 +117,32 @@ a.setting-card:hover, a.setting-card:focus-visible { transform: translateY(-2px)
 .manager-mode-tab { flex: 1; min-height: 46px; border: 2px solid #fff; border-radius: 14px; background: rgba(255,255,255,.75); color: #70567e; font: inherit; font-weight: 900; cursor: pointer; }
 .manager-mode-tab.active { border-color: #d1b5dd; background: linear-gradient(135deg, #fff0f7, #eee6ff); color: #7650bd; }
 
+/* 冒険記録ページ。要約は3列、カテゴリ別記録は読み比べやすいカードで表示する。 */
+.progress-page { width: min(calc(100% - 28px), 900px); }
+.progress-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+.progress-stat { display: grid; gap: 5px; padding: 18px; border: 2px solid #fff; border-radius: 20px; background: linear-gradient(145deg, #fff4fa, #f4efff); box-shadow: var(--shadow); text-align: center; }
+.progress-stat span { color: #806d88; font-size: .8rem; font-weight: 800; }
+.progress-stat strong { color: var(--purple-dark); font-size: 1.4rem; }
+.weak-category-box { background: #fffaf0; }
+.weak-category-box ul { display: grid; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+.weak-category-box li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 11px; border-radius: 12px; background: rgba(255,255,255,.75); color: #765f55; font-size: .88rem; }
+.weak-category-box li strong { color: #c05b72; white-space: nowrap; }
+.category-record-list { display: grid; gap: 10px; }
+.category-record { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 14px; border: 1px solid #eadbed; border-radius: 16px; background: #fff; }
+.category-record > div:first-child { display: grid; gap: 4px; }
+.record-course { width: max-content; padding: 2px 7px; border-radius: 99px; background: #f0e8f8; color: #7650bd; font-size: .68rem; font-weight: 900; }
+.category-record dl { display: grid; grid-template-columns: repeat(4, auto); gap: 12px; margin: 0; }
+.category-record dl div { text-align: center; }
+.category-record dt { color: #8a778f; font-size: .66rem; font-weight: 800; }
+.category-record dd { margin: 1px 0 0; color: #644773; font-size: .84rem; font-weight: 900; white-space: nowrap; }
+
+@media (max-width: 620px) {
+  .progress-stats { grid-template-columns: 1fr; }
+  .progress-stat { grid-template-columns: 1fr auto; align-items: center; padding: 13px 16px; text-align: left; }
+  .category-record { grid-template-columns: 1fr; }
+  .category-record dl { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+}
+
 .manager-layout {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);

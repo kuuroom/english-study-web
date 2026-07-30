@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
   <!-- このアプリ専用の見た目。読み込み順はWebフォントより後にする -->
   <!-- バージョン値を変えると、公開後も古いCSSキャッシュを使わず再取得する -->
-  <link rel="stylesheet" href="css/style.css?v=20260730-1">
+  <link rel="stylesheet" href="css/style.css?v=20260730-2">
 </head>
 <body>
   <!-- 背景に浮かぶ装飾。aria-hiddenにより読み上げ対象から除外する -->
@@ -52,6 +52,8 @@
         <img src="data/assets/icon-star.png" alt="">
         <span><strong id="correct-total">0</strong> 正解</span>
       </div>
+      <!-- 詳しい学習状況は専用ページに分け、ここには最小幅の入口だけを置く -->
+      <a class="record-link" href="progress.html" aria-label="冒険記録を開く">🏆 <span>記録</span></a>
     </section>
 
     <!-- =====================================================
@@ -90,34 +92,6 @@
       <!-- カード本体はquestions.jsonを基にJavaScriptが挿入する -->
       <div id="category-list" class="category-list"></div>
 
-      <!-- localStorageに保存された挑戦回数を表示する領域。リセット操作は設定ページに置く -->
-      <section class="progress-box">
-        <div class="progress-heading">
-          <p class="box-kicker">🏆 ADVENTURE LOG</p>
-          <h3>これまでの冒険記録</h3>
-          <p id="total-progress">まだ記録はありません。</p>
-        </div>
-        <div class="progress-stats" aria-label="学習進捗">
-          <div class="progress-stat">
-            <span>全体正答率</span>
-            <strong id="overall-correct-rate">--%</strong>
-          </div>
-          <div class="progress-stat">
-            <span>文法の進捗</span>
-            <strong id="grammar-progress">0 / 37</strong>
-          </div>
-          <div class="progress-stat">
-            <span>単語の進捗</span>
-            <strong id="vocabulary-progress">0 / 43</strong>
-          </div>
-        </div>
-        <div class="weak-category-box">
-          <strong>もう一度練習したいカテゴリ</strong>
-          <ul id="weak-category-list">
-            <li>クエストに挑戦すると表示されます。</li>
-          </ul>
-        </div>
-      </section>
     </section>
 
     <!-- =====================================================
@@ -217,6 +191,6 @@
 
   <!-- HTML要素をすべて読み込んだ後でアプリ処理を開始する -->
   <!-- GitHub Pages更新後に古いJavaScriptが残らないようバージョンを付ける -->
-  <script src="js/app.js?v=20260730-1"></script>
+  <script src="js/app.js?v=20260730-2"></script>
 </body>
 </html>
