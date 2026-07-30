@@ -4,6 +4,7 @@
 // 正解1問でもらえる経験値と、レベルアップに必要な経験値。
 const EXP_PER_CORRECT = 10;
 const EXP_PER_LEVEL = 100;
+const DEFAULT_DRAW_COUNT = 10;
 // localStorageに保存するときのキー。名前を変えると過去データを読めなくなる。
 const PLAYER_STORAGE_KEY = "englishQuestPlayer";
 
@@ -14,6 +15,9 @@ const state = {
   data: null,
   // 現在挑戦中のカテゴリ
   currentCategory: null,
+  // トップ画面で選択中の問題形式と学年
+  selectedCourse: "grammar",
+  selectedGrade: 1,
   // 出題順にシャッフルされた問題配列
   questions: [],
   // 現在表示している問題の位置（0始まり）
@@ -39,6 +43,9 @@ const screens = {
 
 // getElementByIdを処理のたびに繰り返さないよう、最初に参照を保持する。
 const categoryList = document.getElementById("category-list");
+const questBoardTitle = document.getElementById("quest-board-title");
+const courseTabs = [...document.querySelectorAll(".course-tab")];
+const gradeTabs = [...document.querySelectorAll(".grade-tab")];
 const totalProgress = document.getElementById("total-progress");
 const categoryName = document.getElementById("category-name");
 const questionCount = document.getElementById("question-count");
@@ -68,7 +75,7 @@ async function loadData() {
   const response = await fetch("data/questions.json");
   if (!response.ok) throw new Error("問題データを読み込めませんでした。");
 
-  state.data = await response.json();
+  state.data = normalizeData(await response.json());
   updatePlayerStatus();
   renderCategories();
   updateTotalProgress();
@@ -78,16 +85,48 @@ async function loadData() {
 // ============================================================
 // クエスト選択画面
 // ============================================================
-// questions.jsonのcategoriesからクエストカードを動的に作る。
+// 旧形式のcategoriesも読み込めるようにしつつ、新形式へ揃える。
+function normalizeData(data) {
+  return {
+    version: data.version || 1,
+    grammarUnits: data.grammarUnits || data.categories || [],
+    vocabularyUnits: data.vocabularyUnits || []
+  };
+}
+
+// 現在選択中の形式・学年に該当する単元を表示順で返す。
+function getVisibleUnits() {
+  const source = state.selectedCourse === "grammar"
+    ? state.data.grammarUnits
+    : state.data.vocabularyUnits;
+  return source
+    .filter(unit => Number(unit.grade) === state.selectedGrade)
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+}
+
+// questions.jsonの単元からクエストカードを動的に作る。
 function renderCategories() {
   // 再描画時に古いカードが重複しないよう、一度空にする。
   categoryList.innerHTML = "";
 
-  state.data.categories.forEach((category, index) => {
+  courseTabs.forEach(tab => tab.classList.toggle("active", tab.dataset.course === state.selectedCourse));
+  gradeTabs.forEach(tab => tab.classList.toggle("active", Number(tab.dataset.grade) === state.selectedGrade));
+  questBoardTitle.textContent = state.selectedCourse === "grammar"
+    ? `中学${state.selectedGrade}年の文法`
+    : `中学${state.selectedGrade}年の単語`;
+
+  const units = getVisibleUnits();
+  units.forEach((category, index) => {
     // 過去に挑戦済みなら、最高点をカードに表示する。
     const saved = getCategoryProgress(category.id);
     const button = document.createElement("button");
-    const icons = ["📜", "🔮", "🗝️", "🌟"];
+    const grammarIcons = ["📜", "🔮", "🗝️", "🌟"];
+    const vocabularyIcons = ["🔤", "📖", "✏️", "🧠"];
+    const icons = state.selectedCourse === "grammar" ? grammarIcons : vocabularyIcons;
+    const poolSize = state.selectedCourse === "grammar"
+      ? category.questions.length
+      : category.words.length;
+    const drawCount = Math.min(category.drawCount || DEFAULT_DRAW_COUNT, poolSize);
 
     button.type = "button";
     button.className = "category-card";
@@ -97,23 +136,29 @@ function renderCategories() {
       <h3>${category.name}</h3>
       <p>${category.description}</p>
       <div class="category-meta">
-        <span>⚔️ ${category.questions.length}問</span>
+        <span>📚 全${poolSize}${state.selectedCourse === "grammar" ? "問" : "語"}</span>
+        <span>⚔️ ${drawCount}問出題</span>
         <span>${saved ? `👑 最高 ${saved.bestScore}/${saved.total}` : "✨ 未挑戦"}</span>
       </div>
     `;
 
     // カード固有のIDを渡して、そのクエストを開始する。
-    button.addEventListener("click", () => startQuiz(category.id));
+    button.addEventListener("click", () => startQuiz(state.selectedCourse, category.id));
     categoryList.appendChild(button);
   });
+
+  if (units.length === 0) {
+    categoryList.innerHTML = `<div class="empty-category-message">この学年の${state.selectedCourse === "grammar" ? "文法問題" : "単語問題"}は準備中です。</div>`;
+  }
 }
 
 // 選択したカテゴリの状態を初期化し、問題画面へ移動する。
-function startQuiz(categoryId) {
-  const category = state.data.categories.find(item => item.id === categoryId);
+function startQuiz(course, categoryId) {
+  const source = course === "grammar" ? state.data.grammarUnits : state.data.vocabularyUnits;
+  const category = source.find(item => item.id === categoryId);
   if (!category) return;
 
-  const categoryIndex = state.data.categories.findIndex(item => item.id === categoryId);
+  const categoryIndex = source.findIndex(item => item.id === categoryId);
   // カテゴリの並び順に応じて、問題画面の背景を順番に割り当てる。
   // 4カテゴリ以上になった場合は、%（剰余）により先頭から繰り返す。
   const stageBackgrounds = [
@@ -127,8 +172,14 @@ function startQuiz(categoryId) {
   );
 
   state.currentCategory = category;
-  // 元のJSON配列を変更しないようコピーしてからシャッフルする。
-  state.questions = shuffle([...category.questions]);
+  state.currentCategory.course = course;
+  const drawCount = category.drawCount || DEFAULT_DRAW_COUNT;
+  if (course === "grammar") {
+    // 問題プール全体を混ぜ、先頭から指定数だけを使う。
+    state.questions = shuffle([...category.questions]).slice(0, drawCount);
+  } else {
+    state.questions = createVocabularyQuestions(category.words, drawCount);
+  }
   state.questionIndex = 0;
   state.correctCount = 0;
   state.streak = 0;
@@ -136,6 +187,61 @@ function startQuiz(categoryId) {
   updatePlayerStatus();
   showScreen("quiz");
   renderQuestion();
+}
+
+// 単語プールから英→日と日→英を半分ずつ作り、4択問題へ変換する。
+function createVocabularyQuestions(words, drawCount) {
+  const selected = shuffle([...words]).slice(0, Math.min(drawCount, words.length));
+  const englishToJapaneseCount = Math.ceil(selected.length / 2);
+  const questions = selected.map((word, index) => {
+    const direction = index < englishToJapaneseCount ? "en-ja" : "ja-en";
+    const samePart = words.filter(candidate =>
+      candidate.id !== word.id && candidate.partOfSpeech === word.partOfSpeech
+    );
+    const candidates = samePart.length >= 3
+      ? samePart
+      : words.filter(candidate => candidate.id !== word.id);
+    const distractors = shuffle([...candidates]).slice(0, 3);
+    const correct = direction === "en-ja" ? word.meanings[0] : word.word;
+    const choicesForQuestion = [correct];
+    const appendChoice = candidate => {
+      const value = direction === "en-ja" ? candidate.meanings[0] : candidate.word;
+      if (!choicesForQuestion.includes(value)) choicesForQuestion.push(value);
+    };
+    distractors.forEach(appendChoice);
+    // 同じ日本語訳が含まれて4択に足りない場合は、全語彙から補充する。
+    shuffle(words.filter(candidate => candidate.id !== word.id)).forEach(candidate => {
+      if (choicesForQuestion.length < 4) appendChoice(candidate);
+    });
+    const uniqueChoices = choicesForQuestion.slice(0, 4);
+    const shuffledChoices = shuffle(uniqueChoices);
+
+    return {
+      id: `${word.id}-${direction}`,
+      question: direction === "en-ja"
+        ? `「${word.word}」の意味は？`
+        : `「${word.meanings[0]}」を英語で表すと？`,
+      hint: direction === "en-ja" ? `品詞：${getPartOfSpeechLabel(word.partOfSpeech)}` : "正しいつづりを選びましょう。",
+      choices: shuffledChoices,
+      correctIndex: shuffledChoices.indexOf(correct),
+      answer: `${word.word}：${word.meanings.join("、")}`,
+      explanation: word.example
+        ? `例文：${word.example}（${word.exampleJa || ""}）`
+        : `${word.word} は「${word.meanings[0]}」という意味です。`,
+      point: word.note || "単語と意味を声に出して一緒に覚えよう。",
+      vocabularyId: word.id
+    };
+  });
+  return shuffle(questions);
+}
+
+function getPartOfSpeechLabel(partOfSpeech) {
+  const labels = {
+    verb: "動詞", noun: "名詞", adjective: "形容詞", adverb: "副詞",
+    pronoun: "代名詞", preposition: "前置詞", conjunction: "接続詞",
+    phrase: "熟語・表現"
+  };
+  return labels[partOfSpeech] || "単語";
 }
 
 // ============================================================
@@ -234,7 +340,7 @@ function finishQuiz() {
 
   // 最低条件のメッセージを初期値にし、高得点ほど内容を上書きする。
   let message = "解説を読みながら、もう一度クエストに挑戦してみよう！";
-  if (percentage === 100) message = "パーフェクト！ be動詞を使う場面がしっかり見えてきたね！";
+  if (percentage === 100) message = "パーフェクト！ この単元をしっかり理解できています！";
   else if (percentage >= 80) message = "すごい！ 間違えた文を見直せば、さらにレベルアップできそう！";
   else if (percentage >= 60) message = "あと少し！『状態・場所・立場』か『動作』かを意識してみよう。";
 
@@ -355,8 +461,16 @@ function shuffle(array) {
 document.getElementById("next-button").addEventListener("click", nextQuestion);
 document.getElementById("back-button").addEventListener("click", () => showScreen("category"));
 document.getElementById("return-button").addEventListener("click", () => showScreen("category"));
-document.getElementById("retry-button").addEventListener("click", () => startQuiz(state.currentCategory.id));
+document.getElementById("retry-button").addEventListener("click", () => startQuiz(state.currentCategory.course, state.currentCategory.id));
 document.getElementById("reset-progress-button").addEventListener("click", resetProgress);
+courseTabs.forEach(tab => tab.addEventListener("click", () => {
+  state.selectedCourse = tab.dataset.course;
+  renderCategories();
+}));
+gradeTabs.forEach(tab => tab.addEventListener("click", () => {
+  state.selectedGrade = Number(tab.dataset.grade);
+  renderCategories();
+}));
 
 // 最後に問題データを読み込む。失敗時は操作不能なローディング画面の
 // 代わりに、原因を確認できるエラー画面を表示する。

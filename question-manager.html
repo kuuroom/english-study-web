@@ -36,7 +36,12 @@
 
     <p id="manager-status" class="manager-status" role="status" aria-live="polite"></p>
 
-    <div class="manager-layout">
+    <div class="manager-mode-tabs" aria-label="管理対象">
+      <button class="manager-mode-tab active" type="button" data-manager-mode="grammar">📘 文法問題</button>
+      <button class="manager-mode-tab" type="button" data-manager-mode="vocabulary">🔤 単語</button>
+    </div>
+
+    <div id="grammar-manager" class="manager-layout">
       <aside class="manager-sidebar">
         <div class="panel-heading">
           <div>
@@ -61,6 +66,21 @@
           <div class="form-grid">
             <label>ID<input id="category-id" required pattern="[a-z0-9-]+" placeholder="example-category"></label>
             <label>カテゴリ名<input id="category-name-input" required></label>
+            <label>学年
+              <select id="category-grade">
+                <option value="1">中学1年</option>
+                <option value="2">中学2年</option>
+                <option value="3">中学3年</option>
+              </select>
+            </label>
+            <label>表示順<input id="category-order" type="number" min="1" required></label>
+            <label>1回の出題数<input id="category-draw-count" type="number" min="1" max="100" required></label>
+            <label>重点度
+              <select id="category-priority">
+                <option value="normal">標準</option>
+                <option value="high">重点</option>
+              </select>
+            </label>
             <label class="full-field">説明<textarea id="category-description" rows="2" required></textarea></label>
             <label class="full-field">学習ポイント<textarea id="category-lesson" rows="2"></textarea></label>
           </div>
@@ -110,6 +130,80 @@
           <div class="form-actions">
             <button class="manager-button manager-button-primary" type="submit">問題を反映</button>
             <button id="delete-question-button" class="manager-button danger-button" type="button">この問題を削除</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <div id="vocabulary-manager" class="manager-layout hidden">
+      <aside class="manager-sidebar">
+        <div class="panel-heading">
+          <div><p>VOCABULARY UNITS</p><h2>単語ステップ</h2></div>
+          <button id="add-vocabulary-unit-button" class="small-button" type="button">＋追加</button>
+        </div>
+        <div id="vocabulary-unit-list" class="manager-list"></div>
+      </aside>
+
+      <section class="manager-content">
+        <form id="vocabulary-unit-form" class="editor-panel">
+          <div class="panel-heading">
+            <div><p>VOCABULARY UNIT</p><h2>ステップ設定</h2></div>
+            <button id="delete-vocabulary-unit-button" class="small-button danger-button" type="button">削除</button>
+          </div>
+          <div class="form-grid">
+            <label>ID<input id="vocabulary-unit-id" required pattern="[a-z0-9-]+"></label>
+            <label>名称<input id="vocabulary-unit-name" required></label>
+            <label>学年
+              <select id="vocabulary-unit-grade">
+                <option value="1">中学1年</option>
+                <option value="2">中学2年</option>
+                <option value="3">中学3年</option>
+              </select>
+            </label>
+            <label>STEP<input id="vocabulary-unit-step" type="number" min="1" required></label>
+            <label>表示順<input id="vocabulary-unit-order" type="number" min="1" required></label>
+            <label>1回の出題数<input id="vocabulary-unit-draw-count" type="number" min="1" max="100" required></label>
+            <label class="full-field">説明<textarea id="vocabulary-unit-description" rows="2" required></textarea></label>
+          </div>
+          <button class="manager-button manager-button-primary" type="submit">ステップ設定を反映</button>
+        </form>
+
+        <section class="editor-panel">
+          <div class="panel-heading">
+            <div><p>WORDS</p><h2>単語一覧 <span id="word-total"></span></h2></div>
+            <button id="add-word-button" class="small-button" type="button">＋単語追加</button>
+          </div>
+          <div id="word-list" class="question-manager-list"></div>
+        </section>
+
+        <form id="word-form" class="editor-panel hidden">
+          <div class="panel-heading">
+            <div><p>WORD EDITOR</p><h2 id="word-editor-title">単語を編集</h2></div>
+            <button id="close-word-button" class="small-button" type="button">閉じる</button>
+          </div>
+          <div class="form-grid">
+            <label>ID<input id="word-id" required pattern="[a-zA-Z0-9-]+"></label>
+            <label>英単語・表現<input id="word-input" required></label>
+            <label>日本語<input id="word-meaning" required></label>
+            <label>品詞
+              <select id="word-part-of-speech">
+                <option value="verb">動詞</option>
+                <option value="noun">名詞</option>
+                <option value="adjective">形容詞</option>
+                <option value="adverb">副詞</option>
+                <option value="pronoun">代名詞</option>
+                <option value="preposition">前置詞</option>
+                <option value="conjunction">接続詞</option>
+                <option value="phrase">熟語・表現</option>
+              </select>
+            </label>
+            <label class="full-field">例文<input id="word-example"></label>
+            <label class="full-field">例文の日本語訳<input id="word-example-ja"></label>
+            <label class="full-field">覚え方・補足<textarea id="word-note" rows="2"></textarea></label>
+          </div>
+          <div class="form-actions">
+            <button class="manager-button manager-button-primary" type="submit">単語を反映</button>
+            <button id="delete-word-button" class="manager-button danger-button" type="button">この単語を削除</button>
           </div>
         </form>
       </section>

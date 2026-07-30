@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>English Quest 問題拡充仕様書</title>
+  <style>
+    :root {
+      --ink: #332d3a;
+      --muted: #6f6577;
+      --line: #ded6e3;
+      --paper: #fff;
+      --soft: #f7f3fa;
+      --primary: #7049a9;
+      --accent: #d94f8c;
+      --good: #267851;
+      --warn: #9a6200;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: #f3eef6;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Yu Gothic", sans-serif;
+      line-height: 1.75;
+    }
+    a { color: var(--primary); }
+    code { padding: .1em .35em; border-radius: 5px; background: #eee8f2; }
+    .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); width: min(1280px, 100%); margin: 0 auto; }
+    nav {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      overflow: auto;
+      padding: 28px 22px;
+      border-right: 1px solid var(--line);
+      background: #fcfafd;
+    }
+    nav strong { display: block; margin-bottom: 14px; color: var(--primary); font-size: 1.1rem; }
+    nav a { display: block; padding: 6px 0; color: #594f61; text-decoration: none; font-size: .9rem; }
+    nav a:hover { color: var(--accent); }
+    main { min-width: 0; padding: 48px clamp(24px, 5vw, 72px) 90px; background: var(--paper); }
+    header { padding-bottom: 28px; border-bottom: 2px solid var(--line); }
+    header .label { margin: 0; color: var(--accent); font-weight: 800; letter-spacing: .12em; }
+    h1 { margin: 4px 0 12px; font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.25; }
+    h2 { margin: 54px 0 18px; padding-bottom: 8px; border-bottom: 2px solid var(--line); color: #49385b; }
+    h3 { margin: 30px 0 10px; color: #5b426d; }
+    h4 { margin-bottom: 6px; }
+    p { margin: 10px 0; }
+    ul, ol { padding-left: 1.45rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--muted); font-size: .9rem; }
+    .notice {
+      margin: 18px 0;
+      padding: 14px 18px;
+      border-left: 5px solid var(--primary);
+      border-radius: 8px;
+      background: #f6f0fb;
+    }
+    .warning { border-left-color: var(--warn); background: #fff8e9; }
+    .good { border-left-color: var(--good); background: #edf9f3; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    .card { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+    .card h3, .card h4 { margin-top: 0; }
+    .table-wrap { overflow-x: auto; margin: 16px 0 26px; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { padding: 10px 12px; border: 1px solid var(--line); vertical-align: top; text-align: left; }
+    th { background: #f1ebf5; white-space: nowrap; }
+    tbody tr:nth-child(even) { background: #fcfafd; }
+    .priority { color: #ad376c; font-weight: 800; }
+    .tag { display: inline-block; margin: 2px; padding: 2px 7px; border-radius: 999px; background: #eee5f5; color: #604674; font-size: .76rem; white-space: nowrap; }
+    pre { overflow: auto; padding: 18px; border-radius: 10px; background: #28232d; color: #f8f4fa; font-size: .85rem; line-height: 1.55; }
+    .checklist { list-style: none; padding-left: 0; }
+    .checklist li::before { content: "□"; margin-right: 8px; color: var(--primary); font-weight: 800; }
+    footer { margin-top: 60px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
+    @media (max-width: 800px) {
+      .layout { display: block; }
+      nav { position: static; width: auto; height: auto; padding: 18px 20px; border-right: 0; border-bottom: 1px solid var(--line); }
+      nav strong { margin-bottom: 6px; }
+      nav a { display: inline-block; margin-right: 12px; }
+      main { padding: 30px 18px 70px; }
+      th, td { min-width: 130px; }
+    }
+    @media print {
+      body { background: #fff; }
+      .layout { display: block; width: auto; }
+      nav { display: none; }
+      main { padding: 0; }
+      h2 { break-after: avoid; }
+      table, .card, pre { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav aria-label="目次">
+      <strong>問題拡充仕様書</strong>
+      <a href="#purpose">1. 目的・対象者</a>
+      <a href="#principles">2. 基本方針</a>
+      <a href="#structure">3. 全体構成</a>
+      <a href="#grammar">4. 文法問題</a>
+      <a href="#vocabulary">5. 単語問題</a>
+      <a href="#selection">6. 出題ロジック</a>
+      <a href="#data">7. データ仕様</a>
+      <a href="#ui">8. 画面仕様</a>
+      <a href="#quality">9. 品質基準</a>
+      <a href="#migration">10. 既存問題の移行</a>
+      <a href="#tasks">11. 実装タスク</a>
+      <a href="#sources">12. 参考資料</a>
+    </nav>
+
+    <main>
+      <header>
+        <p class="label">ENGLISH QUEST</p>
+        <h1>中学英語 問題拡充仕様書</h1>
+        <div class="meta">
+          <span>版：1.0</span>
+          <span>作成日：2026年7月30日</span>
+          <span>対象：中学1～3年の文法・語彙</span>
+        </div>
+      </header>
+
+      <section id="purpose">
+        <h2>1. 目的・対象者</h2>
+        <h3>1.1 目的</h3>
+        <p>中学英語の序盤でつまずいた学習者が、中学1年の基礎から中学3年の範囲まで順番に学び直せる問題体系を作る。単なる正誤判定ではなく、短いヒントと理解しやすい解説により「なぜその答えになるか」を身に付けることを目的とする。</p>
+
+        <h3>1.2 主な使用対象者</h3>
+        <ul>
+          <li>現在、中学2年生。</li>
+          <li>中学英語の序盤から文法理解につまずきがある。</li>
+          <li>基本単語の定着も十分ではない。</li>
+          <li>既習範囲の復習に加え、未習の中学3年範囲まで先取りする。</li>
+        </ul>
+
+        <div class="notice">
+          <strong>設計上の最優先事項：</strong>
+          基礎事項を飛ばさず、1問1テーマで出題する。説明には難しい文法用語だけを使わず、日本語での意味と語順を併記する。
+        </div>
+      </section>
+
+      <section id="principles">
+        <h2>2. 基本方針</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>基礎から順番に</h3>
+            <p>be動詞・一般動詞・語順など、中学1年序盤の内容から積み上げる。</p>
+          </article>
+          <article class="card">
+            <h3>学年ごとに整理</h3>
+            <p>「中1」「中2」「中3」に分け、現在地と先取り範囲を分かりやすくする。</p>
+          </article>
+          <article class="card">
+            <h3>苦手箇所を重点化</h3>
+            <p>三単現、疑問文、時制、不定詞、比較、受け身などは問題プールを厚くする。</p>
+          </article>
+          <article class="card">
+            <h3>毎回10問</h3>
+            <p>各単元の問題プールから10問をランダムに選び、繰り返し時の丸暗記を防ぐ。</p>
+          </article>
+          <article class="card">
+            <h3>語彙も段階制</h3>
+            <p>基本語から学校生活、日常、抽象語へ進み、英日・日英を混ぜる。</p>
+          </article>
+          <article class="card">
+            <h3>誤答から学べる</h3>
+            <p>誤答選択肢は無関係な語ではなく、よくある間違いを意図的に使う。</p>
+          </article>
+        </div>
+
+        <div class="notice warning">
+          学年別の登場順は教科書によって異なる。本仕様の学年区分は一般的な学習順と前提関係を基準とし、学校の教科書に合わせて単元順を並べ替えられる構造にする。
+        </div>
+      </section>
+
+      <section id="structure">
+        <h2>3. 全体構成</h2>
+        <p>トップ画面で、まず「文法クエスト」と「単語クエスト」を選ぶ。その後、学年と単元を選択する。</p>
+        <pre>トップ
+├─ 文法クエスト
+│  ├─ 中学1年
+│  │  ├─ be動詞
+│  │  ├─ 一般動詞
+│  │  └─ ...
+│  ├─ 中学2年
+│  └─ 中学3年
+└─ 単語クエスト
+   ├─ STEP 1 基礎語
+   ├─ STEP 2 学校・日常
+   ├─ STEP 3 中学1年
+   ├─ STEP 4 中学2年
+   └─ STEP 5 中学3年</pre>
+
+        <h3>3.1 問題プールの目安</h3>
+        <table>
+          <thead><tr><th>種類</th><th>1単元の最低登録数</th><th>1回の出題数</th><th>重点単元</th></tr></thead>
+          <tbody>
+            <tr><td>文法</td><td>20問</td><td>10問</td><td>30～40問</td></tr>
+            <tr><td>単語</td><td>1ステップ50語以上</td><td>10問</td><td>苦手語を優先再出題</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="grammar">
+        <h2>4. 文法問題仕様</h2>
+        <h3>4.1 共通形式</h3>
+        <ul>
+          <li>1回につき10問。</li>
+          <li>対象単元の問題プールから重複なしでランダム抽選する。</li>
+          <li>基本は2～4択。語順整序や穴埋めも将来追加できるデータ構造にする。</li>
+          <li>各問に「ヒント」「答え」「詳しい解説」「覚え方のポイント」を持たせる。</li>
+          <li>日本語から英文を考える問題、英文の意味を判断する問題、正しい語順を選ぶ問題を混ぜる。</li>
+          <li>重点単元では、肯定文・否定文・疑問文・短答・語順を分けて十分な問題数を用意する。</li>
+        </ul>
+
+        <h3>4.2 中学1年</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>順</th><th>単元</th><th>主な内容</th><th>重点</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>英語の語順と品詞の入口</td><td>主語＋動詞、日本語との語順差、名詞・動詞・形容詞</td><td class="priority">最重要</td></tr>
+              <tr><td>2</td><td>be動詞</td><td>am / is / are、肯定・否定・疑問・短答、状態・身分・場所</td><td class="priority">最重要</td></tr>
+              <tr><td>3</td><td>一般動詞</td><td>肯定・否定・疑問、do / don't、動作と習慣</td><td class="priority">最重要</td></tr>
+              <tr><td>4</td><td>be動詞と一般動詞の区別</td><td>混在させない、疑問文・否定文の作り分け</td><td class="priority">最重要</td></tr>
+              <tr><td>5</td><td>人称代名詞</td><td>I / you / he / she / it / we / they、主格・所有格・目的格</td><td class="priority">重点</td></tr>
+              <tr><td>6</td><td>名詞・冠詞・複数形</td><td>a / an / the、複数形、数えられる・数えられない名詞の入口</td><td>標準</td></tr>
+              <tr><td>7</td><td>三単現</td><td>-s / -es、does / doesn't、have→has</td><td class="priority">最重要</td></tr>
+              <tr><td>8</td><td>疑問詞</td><td>what / who / where / when / why / how、疑問文の語順</td><td class="priority">重点</td></tr>
+              <tr><td>9</td><td>命令文・Let's</td><td>肯定・否定命令、Let's ～</td><td>標準</td></tr>
+              <tr><td>10</td><td>can</td><td>能力・許可、肯定・否定・疑問</td><td>標準</td></tr>
+              <tr><td>11</td><td>現在進行形</td><td>be動詞＋-ing、一般動詞現在形との違い</td><td class="priority">重点</td></tr>
+              <tr><td>12</td><td>一般動詞の過去形</td><td>規則・不規則、did / didn't</td><td class="priority">重点</td></tr>
+              <tr><td>13</td><td>be動詞の過去形</td><td>was / were、一般動詞過去との区別</td><td class="priority">重点</td></tr>
+              <tr><td>14</td><td>There is / are</td><td>存在、単数・複数、場所表現</td><td>標準</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.3 中学2年</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>順</th><th>単元</th><th>主な内容</th><th>重点</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>中1時制の総復習</td><td>現在・過去・進行形、疑問・否定</td><td class="priority">最重要</td></tr>
+              <tr><td>2</td><td>未来表現</td><td>will、be going to、使い分け</td><td class="priority">重点</td></tr>
+              <tr><td>3</td><td>助動詞</td><td>must / have to / should / may、意味と否定</td><td class="priority">重点</td></tr>
+              <tr><td>4</td><td>不定詞・名詞的用法</td><td>want to、like to、to＋動詞原形</td><td class="priority">最重要</td></tr>
+              <tr><td>5</td><td>不定詞・副詞的用法</td><td>目的「～するために」</td><td class="priority">重点</td></tr>
+              <tr><td>6</td><td>不定詞・形容詞的用法</td><td>something to drink など</td><td class="priority">重点</td></tr>
+              <tr><td>7</td><td>動名詞</td><td>動詞＋-ing、目的語、to不定詞との使い分け</td><td class="priority">最重要</td></tr>
+              <tr><td>8</td><td>接続詞</td><td>when / if / because / that、主節と従属節</td><td class="priority">重点</td></tr>
+              <tr><td>9</td><td>比較</td><td>比較級・最上級・as ～ as、不規則変化</td><td class="priority">最重要</td></tr>
+              <tr><td>10</td><td>文型</td><td>SVC / SVO / SVOO / SVOCの基本、give / call / make</td><td class="priority">重点</td></tr>
+              <tr><td>11</td><td>受け身</td><td>be動詞＋過去分詞、by、時制</td><td class="priority">最重要</td></tr>
+              <tr><td>12</td><td>現在完了への準備</td><td>過去分詞、不規則動詞の整理</td><td>準備</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.4 中学3年</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>順</th><th>単元</th><th>主な内容</th><th>重点</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>現在完了・継続</td><td>have＋過去分詞、for / since、How long</td><td class="priority">最重要</td></tr>
+              <tr><td>2</td><td>現在完了・経験</td><td>ever / never / before、回数</td><td class="priority">最重要</td></tr>
+              <tr><td>3</td><td>現在完了・完了／結果</td><td>just / already / yet</td><td class="priority">最重要</td></tr>
+              <tr><td>4</td><td>現在完了進行形</td><td>have been＋-ing、継続との違い</td><td class="priority">重点</td></tr>
+              <tr><td>5</td><td>不定詞の発展</td><td>疑問詞＋to、ask / tell / want＋人＋to</td><td class="priority">重点</td></tr>
+              <tr><td>6</td><td>分詞</td><td>現在分詞・過去分詞の後置修飾</td><td class="priority">重点</td></tr>
+              <tr><td>7</td><td>関係代名詞・主格</td><td>who / which / that、先行詞</td><td class="priority">最重要</td></tr>
+              <tr><td>8</td><td>関係代名詞・目的格</td><td>which / that、省略</td><td class="priority">最重要</td></tr>
+              <tr><td>9</td><td>間接疑問文</td><td>疑問詞＋主語＋動詞、語順</td><td class="priority">重点</td></tr>
+              <tr><td>10</td><td>仮定法の基礎</td><td>If I were ～ / I wish ～</td><td class="priority">重点</td></tr>
+              <tr><td>11</td><td>中学文法総合</td><td>時制・助動詞・不定詞・比較・受け身・完了・関係代名詞</td><td class="priority">最重要</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="notice">
+          <strong>重点単元の内訳：</strong>
+          各30～40問を目安にし、肯定文だけでなく「否定」「疑問」「語順」「似た表現との区別」をそれぞれ最低5問以上含める。
+        </div>
+      </section>
+
+      <section id="vocabulary">
+        <h2>5. 単語問題仕様</h2>
+        <h3>5.1 出題形式</h3>
+        <ul>
+          <li>すべて4択式。</li>
+          <li>1回につき10問。</li>
+          <li>「英語 → 日本語」と「日本語 → 英語」を原則5問ずつ選び、最終的な順番はランダムにする。</li>
+          <li>同じ単語を同一回で重複出題しない。</li>
+          <li>誤答候補は同じ品詞・近い意味・似た綴りから選ぶ。</li>
+          <li>日本語訳が複数ある語は、中学生向けの代表的な意味を正解とし、補足を解説に表示する。</li>
+          <li>単語単体だけでなく、短い例文を任意で表示できるようにする。</li>
+        </ul>
+
+        <h3>5.2 学習ステップ</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>段階</th><th>主な語彙群</th><th>例</th><th>目標登録数</th></tr></thead>
+            <tbody>
+              <tr><td>STEP 1</td><td>最重要基礎語</td><td>be, have, do, go, come, like, want, good, big, today</td><td>150語</td></tr>
+              <tr><td>STEP 2</td><td>身の回り・学校生活</td><td>教科、曜日、時刻、家族、食べ物、場所、持ち物</td><td>250語</td></tr>
+              <tr><td>STEP 3</td><td>中学1年中心</td><td>基本動詞、形容詞、副詞、前置詞、疑問詞</td><td>350語</td></tr>
+              <tr><td>STEP 4</td><td>中学2年中心</td><td>活動、感情、社会、自然、比較や説明に使う語</td><td>450語</td></tr>
+              <tr><td>STEP 5</td><td>中学3年中心</td><td>抽象語、環境、文化、国際理解、意見表明に使う語</td><td>450語以上</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>中学校では、小学校で学習した語に加えて<strong>1,600～1,800語程度の新語</strong>を扱うことが示されている。本アプリでは最初から全語を一括投入せず、使用頻度と学習順を優先して段階的に整備する。</p>
+
+        <h3>5.3 語彙データに持たせる情報</h3>
+        <p>
+          <span class="tag">英単語</span>
+          <span class="tag">日本語</span>
+          <span class="tag">品詞</span>
+          <span class="tag">学年</span>
+          <span class="tag">ステップ</span>
+          <span class="tag">例文</span>
+          <span class="tag">例文訳</span>
+          <span class="tag">よく似た語</span>
+          <span class="tag">不規則変化</span>
+        </p>
+      </section>
+
+      <section id="selection">
+        <h2>6. 出題ロジック</h2>
+        <h3>6.1 文法</h3>
+        <ol>
+          <li>選択された単元の有効な問題を取得する。</li>
+          <li>直近の出題履歴を除外候補にする。</li>
+          <li>未出題・過去に不正解・正答率が低い問題へ重みを付ける。</li>
+          <li>同じ設問パターンが連続しすぎないよう調整する。</li>
+          <li>重複なしで10問を選び、順番をシャッフルする。</li>
+        </ol>
+
+        <h3>6.2 単語</h3>
+        <ol>
+          <li>選択ステップの語彙から10語を選ぶ。</li>
+          <li>英日5問、日英5問を基本とする。奇数比率に変更してもよい。</li>
+          <li>正解語と同じ品詞を優先して誤答候補を3つ選ぶ。</li>
+          <li>同じ選択肢が偏って出ないよう、正解位置を0～3へ分散する。</li>
+          <li>最後に10問全体の順番をシャッフルする。</li>
+        </ol>
+
+        <h3>6.3 問題不足時</h3>
+        <ul>
+          <li>文法単元が10問未満の場合は、登録済み全問を出題する。</li>
+          <li>単語の誤答候補が不足する場合は、同学年→同ステップ→全語彙の順で候補を広げる。</li>
+          <li>正解と同じ表記・同義として許容すべき語は誤答へ入れない。</li>
+        </ul>
+      </section>
+
+      <section id="data">
+        <h2>7. データ仕様案</h2>
+        <p>文法と単語を明確に分け、将来の問題形式追加に耐えられるよう、現在の <code>categories</code> だけの構造から次の形式へ拡張する。</p>
+
+        <h3>7.1 文法単元</h3>
+        <pre>{
+  "grammarUnits": [
+    {
+      "id": "g1-be-verbs",
+      "grade": 1,
+      "order": 2,
+      "name": "be動詞",
+      "description": "am / is / are の使い方",
+      "priority": "high",
+      "drawCount": 10,
+      "questions": [
+        {
+          "id": "g1-be-001",
+          "type": "choice",
+          "question": "私は中学生です。",
+          "hint": "立場を説明する文です。",
+          "choices": ["I am a student.", "I do a student."],
+          "correctIndex": 0,
+          "answer": "I am a student.",
+          "explanation": "立場の説明にはbe動詞を使います。",
+          "point": "「AはBです」はbe動詞。",
+          "tags": ["肯定文", "am", "基礎"],
+          "difficulty": 1
+        }
+      ]
+    }
+  ]
+}</pre>
+
+        <h3>7.2 単語</h3>
+        <pre>{
+  "vocabulary": [
+    {
+      "id": "v-go",
+      "word": "go",
+      "meanings": ["行く"],
+      "partOfSpeech": "verb",
+      "grade": 1,
+      "step": 1,
+      "order": 10,
+      "example": "I go to school.",
+      "exampleJa": "私は学校へ行きます。",
+      "forms": {
+        "past": "went",
+        "pastParticiple": "gone"
+      },
+      "distractorTags": ["basic-verb", "movement"]
+    }
+  ]
+}</pre>
+
+        <h3>7.3 必須項目</h3>
+        <table>
+          <thead><tr><th>対象</th><th>必須</th><th>任意</th></tr></thead>
+          <tbody>
+            <tr><td>文法単元</td><td>id, grade, order, name, drawCount, questions</td><td>description, priority</td></tr>
+            <tr><td>文法問題</td><td>id, type, question, choices, correctIndex, answer, explanation</td><td>hint, point, tags, difficulty</td></tr>
+            <tr><td>単語</td><td>id, word, meanings, partOfSpeech, grade, step</td><td>order, example, exampleJa, forms, distractorTags</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="ui">
+        <h2>8. 画面仕様</h2>
+        <h3>8.1 学習者向け画面</h3>
+        <ul>
+          <li>最初に「文法」「単語」を大きなカードで選ぶ。</li>
+          <li>文法では学年タブと単元カードを表示する。</li>
+          <li>単元カードに「問題プール数」「1回10問」「最高点」「挑戦回数」を表示する。</li>
+          <li>未習の中学3年範囲には「先取り」表示を付けるが、選択は制限しない。</li>
+          <li>問題画面には現在の「学年・単元名」を常に表示する。</li>
+          <li>単語問題では、英日／日英の方向を問題上部に明示する。</li>
+        </ul>
+
+        <h3>8.2 管理画面</h3>
+        <ul>
+          <li>「文法単元」と「単語」の管理をタブで分ける。</li>
+          <li>学年、表示順、重点度、難易度、タグを編集できる。</li>
+          <li>文法単元ごとの登録問題数を表示し、20問未満なら警告する。</li>
+          <li>単語はCSVまたはJSONの一括読込に対応する。</li>
+          <li>ID重複、正解番号不正、選択肢不足、必須項目不足を保存前に検証する。</li>
+          <li>同じ問題文や同じ英単語の重複候補を警告する。</li>
+        </ul>
+      </section>
+
+      <section id="quality">
+        <h2>9. 問題品質基準</h2>
+        <ul class="checklist">
+          <li>設問の正解が1つに決まる。</li>
+          <li>学習範囲外の知識がないと解けない問題にしない。</li>
+          <li>英語・日本語ともに不自然な表現を避ける。</li>
+          <li>解説は正解の理由だけでなく、誤答がなぜ違うかも必要に応じて説明する。</li>
+          <li>中学序盤の問題では、難しい文法用語に短い言い換えを添える。</li>
+          <li>固有名詞、文化、性別、家族構成などに偏りすぎない。</li>
+          <li>同じ型の数字や名前だけを変えた問題を増やしすぎない。</li>
+          <li>単語の誤答は明らかに無関係なものだけにせず、学習価値のある候補にする。</li>
+          <li>正解位置が特定の番号へ偏らない。</li>
+          <li>追加後に実際のゲームで10問通して確認する。</li>
+        </ul>
+
+        <h3>9.1 難易度</h3>
+        <table>
+          <thead><tr><th>値</th><th>基準</th><th>例</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>単一ルールの確認</td><td>am / is / are を選ぶ</td></tr>
+            <tr><td>2</td><td>否定・疑問・語順</td><td>Does he ～? を選ぶ</td></tr>
+            <tr><td>3</td><td>似た表現の使い分け</td><td>現在形と現在進行形</td></tr>
+            <tr><td>4</td><td>複数ルールを含む</td><td>時制＋受け身</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="migration">
+        <h2>10. 既存問題の移行</h2>
+        <p>現在の15問は削除せず、次のように中学1年の文法単元へ移す。</p>
+        <table>
+          <thead><tr><th>既存カテゴリ</th><th>移行先</th><th>対応</th></tr></thead>
+          <tbody>
+            <tr><td>be動詞？ 一般動詞？（10問）</td><td>中1「be動詞と一般動詞の区別」</td><td>ID、タグ、難易度を追加</td></tr>
+            <tr><td>文の意味から見分ける（5問）</td><td>同単元または復習単元</td><td>英訳を問う形式との重複を確認</td></tr>
+          </tbody>
+        </table>
+        <p>移行後、この重点単元を最初に30問以上まで増やし、ランダム10問出題の動作確認に使う。</p>
+      </section>
+
+      <section id="tasks">
+        <h2>11. 実装タスク</h2>
+        <ol>
+          <li><strong>データ形式確定：</strong>文法単元・単語データ・ID規則を確定する。</li>
+          <li><strong>既存15問の移行：</strong>新形式へ変換し、表示が変わらないことを確認する。</li>
+          <li><strong>画面分岐追加：</strong>文法／単語、学年、単元を選べるようにする。</li>
+          <li><strong>10問抽選：</strong>問題プールから重複なしで10問選ぶ。</li>
+          <li><strong>単語4択生成：</strong>英日／日英と誤答3件を自動生成する。</li>
+          <li><strong>記録形式拡張：</strong>単元別・単語別の正答率と直近出題を保存する。</li>
+          <li><strong>管理画面拡張：</strong>学年・順番・タグ・単語一括入力へ対応する。</li>
+          <li><strong>第1弾問題作成：</strong>中1基礎4単元を各20～30問にする。</li>
+          <li><strong>第1弾単語作成：</strong>STEP 1の150語を登録する。</li>
+          <li><strong>内容レビュー：</strong>正解、英文、解説、難易度、重複を確認する。</li>
+          <li><strong>中2・中3へ順次拡張：</strong>前提単元から順に追加する。</li>
+        </ol>
+
+        <h3>11.1 推奨する最初のリリース範囲</h3>
+        <div class="notice good">
+          <ol>
+            <li>英語の語順</li>
+            <li>be動詞</li>
+            <li>一般動詞</li>
+            <li>be動詞と一般動詞の区別</li>
+            <li>STEP 1 基礎単語150語</li>
+          </ol>
+          <p>対象者のつまずき位置に最も近いため、先に中1基礎を十分な問題数へ増やしてから中2・中3を追加する。</p>
+        </div>
+      </section>
+
+      <section id="sources">
+        <h2>12. 参考資料・設計根拠</h2>
+        <ul>
+          <li><a href="https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm" target="_blank" rel="noopener">文部科学省：平成29・30・31年改訂学習指導要領（本文、解説）</a></li>
+          <li><a href="https://www.mext.go.jp/content/20210531-mxt_kyoiku01-100002608_010.pdf" target="_blank" rel="noopener">文部科学省：中学校学習指導要領（平成29年告示）解説 外国語編</a></li>
+          <li><a href="https://www.mext.go.jp/content/1413522_002.pdf" target="_blank" rel="noopener">文部科学省：中学校学習指導要領（平成29年告示）</a></li>
+        </ul>
+        <p>学習指導要領に示される文・文構造・文法事項と語彙規模を土台とし、単元の学年配置と細かな順序は一般的な中学校英語の積み上げを考慮した本プロジェクト独自の設計である。</p>
+      </section>
+
+      <footer>
+        <p>本仕様書は問題拡充前の設計版であり、実装・教材レビューの結果に応じて更新する。</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

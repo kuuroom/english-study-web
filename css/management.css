@@ -108,6 +108,9 @@ a.setting-card:hover, a.setting-card:focus-visible { transform: translateY(-2px)
 
 .manager-status.success { color: #278255; }
 .manager-status.error { color: #bd3f63; }
+.manager-mode-tabs { display: flex; gap: 10px; margin: 0 0 16px; }
+.manager-mode-tab { flex: 1; min-height: 46px; border: 2px solid #fff; border-radius: 14px; background: rgba(255,255,255,.75); color: #70567e; font: inherit; font-weight: 900; cursor: pointer; }
+.manager-mode-tab.active { border-color: #d1b5dd; background: linear-gradient(135deg, #fff0f7, #eee6ff); color: #7650bd; }
 
 .manager-layout {
   display: grid;
