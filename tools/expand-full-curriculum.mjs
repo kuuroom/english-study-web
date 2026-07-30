@@ -24,6 +24,33 @@ function makeQuestion(unitId, index, row) {
   };
 }
 
+// 同じ例文を丸暗記するだけにならないよう、正解と理由をセットで選ぶ
+// 復習問題も作る。元の穴埋め問題10問と合わせ、各単元20問のプールになる。
+function makeReasonQuestion(unitId, index, row) {
+  const [question, answer, wrong1, wrong2, explanation] = row;
+  const choices = [
+    `${answer} ― ${explanation}`,
+    `${wrong1} ― 主語や時制に合うため。`,
+    `${wrong2} ― 空欄にはこの形しか置けないため。`
+  ];
+  const shift = (index + 1) % choices.length;
+  const rotated = [...choices.slice(shift), ...choices.slice(0, shift)];
+
+  return {
+    id: `${unitId}-${String(index + 11).padStart(3, "0")}`,
+    type: "choice",
+    question: `「${question}」の正解と理由の組み合わせは？`,
+    hint: "正解の語句だけでなく、文法上の理由まで確認しましょう。",
+    choices: rotated,
+    correctIndex: rotated.indexOf(choices[0]),
+    answer: choices[0],
+    explanation,
+    point: explanation,
+    tags: ["理由確認"],
+    difficulty: index < 5 ? 2 : 3
+  };
+}
+
 function unit(id, grade, order, name, description, rows, priority = "standard") {
   return {
     id,
@@ -34,7 +61,10 @@ function unit(id, grade, order, name, description, rows, priority = "standard") 
     name,
     description,
     lesson: `${description} 空欄の前後だけでなく、主語・時制・文の意味を確認して答えましょう。`,
-    questions: rows.map((row, index) => makeQuestion(id, index, row))
+    questions: [
+      ...rows.map((row, index) => makeQuestion(id, index, row)),
+      ...rows.map((row, index) => makeReasonQuestion(id, index, row))
+    ]
   };
 }
 
@@ -343,6 +373,18 @@ data.grammarUnits = [
   ...data.grammarUnits.filter(item => !existingIds.has(item.id)),
   ...grammarUnits
 ].sort((a, b) => a.grade - b.grade || a.order - b.order);
+
+// 旧問題を含め、同じ単元内で問題文が完全一致する場合は類題番号を付ける。
+// 出題時に同じ文章が繰り返されたように見えるのを防ぎつつ、内容は保持する。
+for (const grammarUnit of data.grammarUnits) {
+  const questionCounts = new Map();
+  for (const question of grammarUnit.questions) {
+    const original = question.question.trim();
+    const count = (questionCounts.get(original) || 0) + 1;
+    questionCounts.set(original, count);
+    if (count > 1) question.question = `${original}（類題${count}）`;
+  }
+}
 
 // 語彙は「語＋日本語＋品詞」を1行で管理する。複合表現も実際の問題で役立つ語彙として含める。
 const vocabularySources = [

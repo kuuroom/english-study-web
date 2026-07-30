@@ -52,7 +52,7 @@ english-study-web/
 データを直接編集する場合、文法は `grammarUnits`、単語は `vocabularyUnits` に追加します。
 `correctIndex` は0始まりで、最初の選択肢が正解なら `0`、2番目なら `1` です。
 
-初期データには、文法37単元・428問、単語5ステップ・1,654語を登録しています。
+初期データには、文法37単元・758問、単語5ステップ・1,654語を登録しています。
 全範囲の初期データを作り直す場合は `node tools/expand-full-curriculum.mjs`、形式を検証する場合は `node tools/validate-question-data.mjs` を実行します。
 
 ```json

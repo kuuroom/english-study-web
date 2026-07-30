@@ -20,6 +20,9 @@ for (const unit of data.grammarUnits || []) {
   if (unit.questions.length < unit.drawCount) {
     addError(`${unit.id}: 登録${unit.questions.length}問に対して出題${unit.drawCount}問`);
   }
+  if (unit.questions.length < 20) {
+    addError(`${unit.id}: ランダム出題用に20問以上必要ですが、${unit.questions.length}問です`);
+  }
   const questionIds = new Set();
   unit.questions.forEach((question, index) => {
     if (question.id) {
