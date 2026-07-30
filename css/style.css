@@ -134,6 +134,7 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 /* カードはスマートフォンで1列、640px以上では後述の指定により2列。 */
 .category-list { display: grid; gap: 16px; }
 .category-card { position: relative; isolation: isolate; width: 100%; min-height: 196px; overflow: hidden; padding: 20px 20px 17px 82px; border: 2px solid #fff; border-radius: 24px; background: rgba(255,255,255,.92); box-shadow: var(--shadow); color: inherit; text-align: left; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; }
+.category-card.vocabulary-card { min-height: 160px; }
 .category-card::backdrop { display: none; }
 .category-card > * { position: relative; z-index: 2; }
 .category-card::before { content: attr(data-icon); position: absolute; left: 18px; top: 20px; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: linear-gradient(145deg, #ffe1ef, #e8dcff); font-size: 1.5rem; }
@@ -287,6 +288,7 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
   .hero-message { max-width: 180px; font-size: .78rem; line-height: 1.65; }
   .hero-characters { right: 0; bottom: -1%; width: 56%; }
   .category-card { min-height: 180px; }
+  .category-card.vocabulary-card { min-height: 150px; }
   .battle-characters { right: -8px; bottom: -108px; width: 145px; }
   .feedback-dialog { padding-top: 54px; }
   .feedback-main { grid-template-columns: 105px 1fr; gap: 10px; }

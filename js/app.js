@@ -132,14 +132,18 @@ function renderCategories() {
       ? category.questions.length
       : category.words.length;
     const drawCount = Math.min(category.drawCount || DEFAULT_DRAW_COUNT, poolSize);
+    // 単語カテゴリは名称だけで内容が分かるため、重複する説明文をカードへ出さない。
+    const descriptionMarkup = state.selectedCourse === "grammar"
+      ? `<p>${category.description}</p>`
+      : "";
 
     button.type = "button";
-    button.className = "category-card";
+    button.className = `category-card${state.selectedCourse === "vocabulary" ? " vocabulary-card" : ""}`;
     button.dataset.icon = icons[index % icons.length];
     button.innerHTML = `
       <p class="quest-number">QUEST ${String(index + 1).padStart(2, "0")}</p>
       <h3>${category.name}</h3>
-      <p>${category.description}</p>
+      ${descriptionMarkup}
       <div class="category-meta">
         <span>📚 全${poolSize}${state.selectedCourse === "grammar" ? "問" : "語"}</span>
         <span>⚔️ ${drawCount}問出題</span>
