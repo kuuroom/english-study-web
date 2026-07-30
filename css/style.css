@@ -149,9 +149,18 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
 
 /* 複数画面で使う白いパネルの共通デザイン。 */
 .progress-box, .quiz-card, .result-card { margin-top: 20px; border: 2px solid #fff; border-radius: 26px; background: rgba(255,255,255,.92); box-shadow: var(--shadow); }
-.progress-box { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px; }
+.progress-box { display: grid; gap: 16px; padding: 20px; }
 .progress-box h3 { margin: 2px 0 3px; font-size: 1rem; }
 .progress-box p:not(.box-kicker) { margin: 0; color: #826e88; font-size: .88rem; }
+.progress-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.progress-stat { display: grid; gap: 3px; padding: 12px; border-radius: 16px; background: linear-gradient(145deg, #fff4fa, #f4efff); text-align: center; }
+.progress-stat span { color: #806d88; font-size: .75rem; font-weight: 800; }
+.progress-stat strong { color: var(--purple-dark); font-size: 1.15rem; }
+.weak-category-box { padding: 14px 16px; border-radius: 17px; background: #fff9e9; }
+.weak-category-box > strong { color: #9b6744; font-size: .86rem; }
+.weak-category-box ul { display: grid; gap: 6px; margin: 9px 0 0; padding: 0; list-style: none; }
+.weak-category-box li { display: flex; justify-content: space-between; gap: 12px; color: #765f55; font-size: .82rem; }
+.weak-category-box li strong { color: #c05b72; white-space: nowrap; }
 /* ============================================================
    問題画面
    ============================================================ */
@@ -278,7 +287,8 @@ button:focus-visible { outline: 4px solid rgba(118, 80, 189, .25); outline-offse
   .category-card::before { left: 14px; top: 18px; width: 45px; height: 45px; }
   .category-card::after { right: 14px; bottom: 16px; }
   .category-meta { padding-right: 65px; flex-wrap: wrap; }
-  .progress-box { align-items: flex-start; flex-direction: column; }
+  .progress-stats { grid-template-columns: 1fr; }
+  .progress-stat { grid-template-columns: 1fr auto; align-items: center; text-align: left; }
   .quest-stage { padding-inline: 6px; }
   .quiz-card { border-radius: 22px; }
   .feedback-heading { align-items: flex-start; flex-direction: column; }

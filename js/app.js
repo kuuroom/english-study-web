@@ -66,6 +66,10 @@ const streakCount = document.getElementById("streak-count");
 const correctTotal = document.getElementById("correct-total");
 const feedbackRibbon = document.getElementById("feedback-ribbon");
 const feedbackCharacter = document.getElementById("feedback-character");
+const overallCorrectRate = document.getElementById("overall-correct-rate");
+const grammarProgress = document.getElementById("grammar-progress");
+const vocabularyProgress = document.getElementById("vocabulary-progress");
+const weakCategoryList = document.getElementById("weak-category-list");
 
 // ============================================================
 // 初期化
@@ -341,7 +345,12 @@ function nextQuestion() {
 
 // クエスト結果を保存し、正答率に応じたメッセージを表示する。
 function finishQuiz() {
-  saveProgress(state.currentCategory.id, state.correctCount, state.questions.length);
+  saveProgress(
+    state.currentCategory.id,
+    state.currentCategory.course,
+    state.correctCount,
+    state.questions.length
+  );
   const percentage = Math.round((state.correctCount / state.questions.length) * 100);
 
   document.getElementById("result-title").textContent = state.currentCategory.name;
@@ -418,27 +427,86 @@ function showLevelUp() {
 }
 
 // カテゴリ別に最高点、直近点、挑戦回数をlocalStorageへ保存する。
-function saveProgress(categoryId, score, total) {
+function saveProgress(categoryId, course, score, total) {
   const progress = getProgressData();
   const previous = progress[categoryId];
+  // 旧形式には累積値がないため、最後に保存された1回分を初期値として引き継ぐ。
+  const previousCorrect = previous?.totalCorrect ?? previous?.lastScore ?? 0;
+  const previousQuestions = previous?.totalQuestions ?? previous?.total ?? 0;
   progress[categoryId] = {
     bestScore: previous ? Math.max(previous.bestScore, score) : score,
     total,
     lastScore: score,
-    attempts: previous ? previous.attempts + 1 : 1
+    attempts: previous ? previous.attempts + 1 : 1,
+    totalCorrect: previousCorrect + score,
+    totalQuestions: previousQuestions + total,
+    course
   };
   localStorage.setItem("englishStudyProgress", JSON.stringify(progress));
 }
 
-// 保存された全カテゴリの記録をトップ画面用の文章にまとめる。
+// 保存された記録から、全体正答率・形式別進捗・苦手カテゴリをまとめる。
 function updateTotalProgress() {
-  const records = Object.values(getProgressData());
+  const progress = getProgressData();
+  const records = Object.values(progress);
+  const grammarUnits = state.data?.grammarUnits || [];
+  const vocabularyUnits = state.data?.vocabularyUnits || [];
+
+  const attemptedGrammar = grammarUnits.filter(unit => progress[unit.id]).length;
+  const attemptedVocabulary = vocabularyUnits.filter(unit => progress[unit.id]).length;
+  grammarProgress.textContent = `${attemptedGrammar} / ${grammarUnits.length}`;
+  vocabularyProgress.textContent = `${attemptedVocabulary} / ${vocabularyUnits.length}`;
+
   if (records.length === 0) {
     totalProgress.textContent = "まだ記録はありません。最初のクエストへ出発しよう！";
+    overallCorrectRate.textContent = "--%";
+    weakCategoryList.innerHTML = "<li>クエストに挑戦すると表示されます。</li>";
     return;
   }
+
   const attempts = records.reduce((sum, item) => sum + item.attempts, 0);
+  const correctAnswers = records.reduce(
+    (sum, item) => sum + (item.totalCorrect ?? item.lastScore ?? 0),
+    0
+  );
+  const answeredQuestions = records.reduce(
+    (sum, item) => sum + (item.totalQuestions ?? item.total ?? 0),
+    0
+  );
+  const correctRate = answeredQuestions
+    ? Math.round((correctAnswers / answeredQuestions) * 100)
+    : 0;
+
   totalProgress.textContent = `${records.length}クエストに挑戦・合計${attempts}回プレイ`;
+  overallCorrectRate.textContent = `${correctRate}%`;
+
+  // 現在も存在するカテゴリだけを対象に、累積正答率が低い順で最大3件表示する。
+  const allUnits = [
+    ...grammarUnits.map(unit => ({ ...unit, courseLabel: "文法" })),
+    ...vocabularyUnits.map(unit => ({ ...unit, courseLabel: "単語" }))
+  ];
+  const weakCategories = allUnits
+    .filter(unit => progress[unit.id])
+    .map(unit => {
+      const record = progress[unit.id];
+      const correct = record.totalCorrect ?? record.lastScore ?? 0;
+      const questions = record.totalQuestions ?? record.total ?? 0;
+      return {
+        name: unit.name,
+        courseLabel: unit.courseLabel,
+        rate: questions ? Math.round((correct / questions) * 100) : 0,
+        attempts: record.attempts || 1
+      };
+    })
+    .filter(item => item.rate < 80)
+    .sort((a, b) => a.rate - b.rate || b.attempts - a.attempts)
+    .slice(0, 3);
+
+  weakCategoryList.innerHTML = weakCategories.length
+    ? weakCategories.map(item =>
+      `<li><span>${item.courseLabel}・${item.name}</span><strong>${item.rate}%</strong></li>`
+    ).join("")
+    : "<li>正答率80%未満のカテゴリはありません。</li>";
 }
 
 // Fisher–Yates法で配列を偏りにくくランダムに並べ替える。

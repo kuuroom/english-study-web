@@ -91,10 +91,30 @@
 
       <!-- localStorageに保存された挑戦回数を表示する領域。リセット操作は設定ページに置く -->
       <section class="progress-box">
-        <div>
+        <div class="progress-heading">
           <p class="box-kicker">🏆 ADVENTURE LOG</p>
           <h3>これまでの冒険記録</h3>
           <p id="total-progress">まだ記録はありません。</p>
+        </div>
+        <div class="progress-stats" aria-label="学習進捗">
+          <div class="progress-stat">
+            <span>全体正答率</span>
+            <strong id="overall-correct-rate">--%</strong>
+          </div>
+          <div class="progress-stat">
+            <span>文法の進捗</span>
+            <strong id="grammar-progress">0 / 37</strong>
+          </div>
+          <div class="progress-stat">
+            <span>単語の進捗</span>
+            <strong id="vocabulary-progress">0 / 43</strong>
+          </div>
+        </div>
+        <div class="weak-category-box">
+          <strong>もう一度練習したいカテゴリ</strong>
+          <ul id="weak-category-list">
+            <li>クエストに挑戦すると表示されます。</li>
+          </ul>
         </div>
       </section>
     </section>
