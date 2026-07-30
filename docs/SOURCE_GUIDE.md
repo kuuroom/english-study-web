@@ -210,7 +210,7 @@ JSONにはコメントを書けない点に注意してください。末尾の�
 
 ### 公開後に古いCSS・JavaScriptが表示される場合
 
-各HTMLが読み込むCSS・JavaScriptのURLには、`?v=20260730-2` のようなバージョン値を付けています。CSSやJavaScriptを更新してGitHub Pagesへ公開するときは、この値も変更してください。URLが変わるため、ブラウザは古いキャッシュではなく新しいファイルを取得します。問題JSONは `cache: "no-store"` で読み込みます。
+各HTMLが読み込むCSS・JavaScriptのURLには、`?v=20260730-3` のようなバージョン値を付けています。CSSやJavaScriptを更新してGitHub Pagesへ公開するときは、この値も変更してください。URLが変わるため、ブラウザは古いキャッシュではなく新しいファイルを取得します。問題JSONは `cache: "no-store"` で読み込みます。
 
 ### 文法単元・単語カテゴリを増やす
 

@@ -127,6 +127,7 @@ a.setting-card:hover, a.setting-card:focus-visible { transform: translateY(-2px)
 .weak-category-box ul { display: grid; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
 .weak-category-box li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 11px; border-radius: 12px; background: rgba(255,255,255,.75); color: #765f55; font-size: .88rem; }
 .weak-category-box li strong { color: #c05b72; white-space: nowrap; }
+.progress-page > .editor-panel + .editor-panel { margin-top: 18px; }
 .category-record-list { display: grid; gap: 10px; }
 .category-record { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 14px; border: 1px solid #eadbed; border-radius: 16px; background: #fff; }
 .category-record > div:first-child { display: grid; gap: 4px; }
